@@ -1,0 +1,3335 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<!DOCTYPE html>
+<html lang="en" data-theme="">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>The Shared Ledger — A Web3 Primer</title>
+<meta name="description" content="An interactive, beginner-friendly primer on blockchains, wallets, transactions, smart contracts, NFTs, DAOs and dApps — kept like an old shared ledger.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;1,500;1,600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  /* ============================================================
+     THE SHARED LEDGER — tokens
+     Palette is unchanged from the original document. Everything
+     new is derived from these nine colours via color-mix().
+     ============================================================ */
+  :root {
+    --ink: #3B2B1E;
+    --ink-soft: #6E5A45;
+    --paper: #F6EEDE;
+    --paper-card: #EEE0C2;
+    --rule: #C3A15E;
+    --verify: #52643F;
+    --verify-soft: #78895F;
+    --stamp: #7C2E39;
+    --stamp-soft: #9A4A4F;
+    --focus: #52643F;
+
+    /* derived */
+    --grain: 0.34;
+    --glow: 12%;
+    --line: color-mix(in srgb, var(--rule) 55%, transparent);
+    --line-soft: color-mix(in srgb, var(--rule) 28%, transparent);
+    --tint: color-mix(in srgb, var(--rule) 14%, transparent);
+    --tint-strong: color-mix(in srgb, var(--rule) 26%, transparent);
+    --card-hi: color-mix(in srgb, var(--paper) 55%, var(--paper-card));
+    --sh-1: 0 1px 0 color-mix(in srgb, var(--rule) 60%, transparent);
+    --sh-2: 0 8px 20px -14px color-mix(in srgb, var(--ink) 80%, transparent);
+    --sh-3: 0 22px 44px -22px color-mix(in srgb, var(--ink) 85%, transparent);
+    --serif: "EB Garamond", Georgia, "Times New Roman", serif;
+    --display: "Playfair Display", Georgia, "Times New Roman", serif;
+    --mono: "Courier Prime", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    --ease: cubic-bezier(.2,.8,.3,1);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ink: #F1E6CC;
+      --ink-soft: #C7B393;
+      --paper: #211A12;
+      --paper-card: #2C2317;
+      --rule: #705832;
+      --verify: #93AC79;
+      --verify-soft: #728C5C;
+      --stamp: #DB929A;
+      --stamp-soft: #C0727C;
+      --focus: #93AC79;
+      --grain: 0.10;
+      --glow: 16%;
+    }
+  }
+  :root[data-theme="dark"] {
+    --ink: #F1E6CC;
+    --ink-soft: #C7B393;
+    --paper: #211A12;
+    --paper-card: #2C2317;
+    --rule: #705832;
+    --verify: #93AC79;
+    --verify-soft: #728C5C;
+    --stamp: #DB929A;
+    --stamp-soft: #C0727C;
+    --focus: #93AC79;
+    --grain: 0.10;
+    --glow: 16%;
+  }
+
+  * { box-sizing: border-box; }
+  html {
+    scroll-padding-top: 96px;
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+  html, body { min-height: 100%; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 18px;
+    line-height: 1.65;
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  /* paper grain */
+  body::before {
+    content: "";
+    position: fixed; inset: -10px;
+    pointer-events: none; z-index: 0;
+    opacity: var(--grain);
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='180' height='180' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E");
+  }
+  /* cursor-following lamplight on the page */
+  body::after {
+    content: "";
+    position: fixed; inset: 0;
+    pointer-events: none; z-index: 0;
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 30%),
+                color-mix(in srgb, var(--rule) var(--glow), transparent), transparent 70%);
+    transition: opacity .4s ease;
+  }
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 28px; position: relative; z-index: 1; }
+  .prose { max-width: 62ch; }
+
+  h1, h2, h3, h4 { font-family: var(--display); margin: 0; }
+  a { color: inherit; }
+  :focus-visible { outline: 2px solid var(--focus); outline-offset: 3px; border-radius: 2px; }
+  button { font-family: inherit; }
+  .sr {
+    position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+    overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+  }
+  .mono { font-family: var(--mono); font-size: 0.86em; letter-spacing: -0.01em; }
+  .hedera { color: var(--rule); font-size: 1.1rem; letter-spacing: 0.3em; }
+
+  /* reveal on scroll — only ever hidden when scripting is actually running */
+  .js .reveal { opacity: 0; transform: translateY(16px); transition: opacity .7s var(--ease), transform .7s var(--ease); transition-delay: var(--d, 0s); }
+  .js .reveal.in { opacity: 1; transform: none; }
+
+  /* ---------- scroll progress ribbon ---------- */
+  .progress-rail {
+    position: fixed; top: 0; left: 0; right: 0; height: 4px;
+    background: color-mix(in srgb, var(--rule) 20%, transparent);
+    z-index: 60;
+  }
+  .progress-fill {
+    height: 100%; width: 0%; position: relative;
+    background: linear-gradient(90deg, var(--verify), var(--rule) 55%, var(--stamp));
+    box-shadow: 0 0 10px -2px color-mix(in srgb, var(--rule) 80%, transparent);
+    transition: width .12s linear;
+  }
+  .progress-fill::after {
+    content: "❧";
+    position: absolute; top: -3px; right: -9px;
+    font-size: .8rem; color: var(--stamp);
+    transform: translateX(0);
+  }
+
+  /* ---------- top bar ---------- */
+  .topbar {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in srgb, var(--paper) 94%, var(--rule));
+    padding-top: calc(16px + env(safe-area-inset-top, 0px));
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--rule);
+    display: flex; align-items: center; justify-content: space-between; gap: 18px;
+  }
+  .topbar::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -5px;
+    height: 1px; background: var(--rule); opacity: .55;
+  }
+  .brand {
+    font-family: var(--display); font-style: italic; font-weight: 600;
+    font-size: 1.25rem; letter-spacing: .01em; white-space: nowrap;
+    display: flex; align-items: baseline; gap: 8px;
+  }
+  .brand span { color: var(--stamp-soft); font-style: normal; }
+  .brand .folio-chip {
+    font-family: var(--mono); font-style: normal; font-size: .62rem;
+    color: var(--ink-soft); border: 1px solid var(--line);
+    padding: 1px 6px; border-radius: 2px; letter-spacing: .04em;
+    background: var(--tint);
+  }
+  .nav-scroll { flex: 1 1 auto; min-width: 0; overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; mask-image: linear-gradient(90deg, transparent, #000 14px, #000 calc(100% - 14px), transparent); }
+  .nav-scroll::-webkit-scrollbar { display: none; }
+  .topbar nav { display: flex; gap: 18px; font-size: .9rem; font-variant: small-caps; letter-spacing: .03em; padding: 2px 10px; }
+  .topbar nav a {
+    text-decoration: none; color: var(--ink-soft); white-space: nowrap;
+    padding-bottom: 3px; position: relative; transition: color .2s ease;
+  }
+  .topbar nav a::after {
+    content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 1.5px;
+    background: var(--stamp-soft); transform: scaleX(0); transform-origin: left;
+    transition: transform .3s var(--ease);
+  }
+  .topbar nav a:hover { color: var(--ink); }
+  .topbar nav a:hover::after, .topbar nav a.active::after { transform: scaleX(1); }
+  .topbar nav a.active { color: var(--ink); }
+  .bar-tools { display: flex; gap: 8px; flex: none; }
+  .icon-btn {
+    border: 1px solid var(--line); background: transparent; color: var(--ink-soft);
+    border-radius: 999px; padding: 5px 13px; cursor: pointer;
+    font-family: var(--serif); font-variant: small-caps; font-size: .82rem; letter-spacing: .04em;
+    transition: background .2s ease, color .2s ease, border-color .2s ease, transform .2s var(--ease);
+  }
+  .icon-btn:hover { background: var(--tint-strong); color: var(--ink); border-color: var(--rule); transform: translateY(-1px); }
+  .icon-btn:active { transform: translateY(1px) scale(.98); }
+
+  /* ---------- buttons ---------- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 24px;
+    font-family: var(--serif); font-size: 1rem; font-weight: 600;
+    font-variant: small-caps; letter-spacing: .02em;
+    border-radius: 999px; text-decoration: none; cursor: pointer;
+    border: 1.5px solid var(--ink); background: transparent; color: var(--ink);
+    position: relative; overflow: hidden;
+    transition: background .18s ease, color .18s ease, border-color .18s ease, transform .16s var(--ease), box-shadow .22s ease;
+  }
+  .btn::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(circle at var(--bx, 50%) var(--by, 50%), color-mix(in srgb, var(--paper) 40%, transparent), transparent 60%);
+    opacity: 0; transition: opacity .3s ease;
+  }
+  .btn:hover { background: var(--verify); border-color: var(--verify); color: var(--paper); box-shadow: var(--sh-2); transform: translateY(-2px); }
+  .btn:hover::before { opacity: 1; }
+  .btn:active { transform: translateY(1px) scale(.985); }
+  .btn.primary { background: var(--ink); color: var(--paper); }
+  .btn.primary:hover { background: var(--stamp-soft); border-color: var(--stamp-soft); color: var(--paper); }
+  .btn.small { padding: 8px 17px; font-size: .9rem; border-width: 1.2px; }
+  .btn.ghost { border-color: var(--line); color: var(--ink-soft); }
+  .btn.ghost:hover { color: var(--paper); }
+  .btn[disabled] { opacity: .45; cursor: not-allowed; transform: none; box-shadow: none; }
+  .btn-row { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+
+  /* ---------- section chrome ---------- */
+  .sec-head { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; margin-bottom: 6px; }
+  .sec-head h2 { font-size: 1.62rem; font-weight: 600; font-style: italic; }
+  .folio { font-family: var(--serif); font-style: italic; font-size: .88rem; color: var(--stamp-soft); }
+  .meta-label {
+    display: inline-block; white-space: nowrap;
+    font-family: var(--mono); font-size: .64rem; letter-spacing: .12em;
+    text-transform: uppercase; color: var(--ink-soft);
+    border: 1px solid var(--line-soft); padding: 2px 7px; border-radius: 2px;
+    background: color-mix(in srgb, var(--rule) 8%, transparent);
+  }
+  .rule-row { display: flex; align-items: center; gap: 12px; margin: 10px 0 20px; color: var(--rule); }
+  .rule-row::before, .rule-row::after { content: ""; height: 1px; background: var(--line); flex: 1; }
+  .note {
+    font-style: italic; font-size: .88rem; color: var(--ink-soft);
+    border-left: 2px solid var(--line); padding-left: 12px; margin-top: 14px;
+  }
+
+  /* ---------- hero ---------- */
+  .hero { padding: 66px 0 34px; position: relative; }
+  .hero .folio { font-size: .95rem; margin-bottom: 14px; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+  .hero h1 {
+    font-size: clamp(2.3rem, 5.6vw, 3.8rem);
+    line-height: 1.08; font-weight: 600; font-style: italic; max-width: 15ch;
+  }
+  .hero h1 .word { display: inline-block; opacity: 0; transform: translateY(18px) rotate(-2deg); animation: wordIn .7s var(--ease) forwards; }
+  @keyframes wordIn { to { opacity: 1; transform: none; } }
+  .hero p.lede { margin-top: 22px; font-size: 1.18rem; color: var(--ink-soft); max-width: 48ch; }
+  .hero .cta-row { margin-top: 30px; display: flex; gap: 14px; flex-wrap: wrap; align-items: center; }
+  .hero-corner {
+    position: absolute; top: 40px; right: 0; width: 132px; height: 132px;
+    pointer-events: none; opacity: .5;
+  }
+  .hero-corner svg { width: 100%; height: 100%; }
+  @media (max-width: 860px) { .hero-corner { display: none; } }
+
+  /* ---------- the chain ---------- */
+  .chain-panel {
+    margin-top: 44px; border: 1px solid var(--rule); border-radius: 4px;
+    background: color-mix(in srgb, var(--paper-card) 55%, var(--paper));
+    padding: 20px 20px 18px; position: relative;
+    box-shadow: var(--sh-1);
+  }
+  .chain-panel::before {
+    content: ""; position: absolute; inset: 7px; border: 1px solid var(--line-soft);
+    pointer-events: none; border-radius: 2px;
+  }
+  .chain-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; margin-bottom: 14px; position: relative; }
+  .chain-stage { overflow-x: auto; padding: 22px 4px 14px; scrollbar-width: thin; }
+  .chain-stage::-webkit-scrollbar { height: 6px; }
+  .chain-stage::-webkit-scrollbar-thumb { background: var(--line); border-radius: 99px; }
+  .chain { display: flex; align-items: center; min-width: max-content; }
+
+  .blockcard {
+    position: relative; width: 168px; flex: none;
+    padding: 18px 14px 15px; text-align: left;
+    background: var(--paper-card);
+    border: 1px solid var(--rule); border-radius: 3px;
+    box-shadow: var(--sh-1);
+    color: inherit; font: inherit; cursor: pointer;
+    opacity: 0; transform: translateY(12px) scale(.96);
+    animation: blockIn .55s var(--ease) forwards;
+    transition: transform .3s var(--ease), box-shadow .3s ease, border-color .25s ease, background .25s ease;
+    transform-style: preserve-3d;
+  }
+  .blockcard::before {
+    content: ""; position: absolute; top: 0; left: 10px; right: 10px; height: 6px;
+    background-image: radial-gradient(circle at 50% 0, transparent 5px, var(--rule) 5.5px);
+    background-size: 14px 12px; background-position: 0 -6px; background-repeat: repeat-x;
+    opacity: .7;
+  }
+  .blockcard:hover { transform: translateY(-7px) rotate(-.9deg); box-shadow: var(--sh-3); border-color: var(--ink-soft); z-index: 3; }
+  .blockcard[aria-pressed="true"] {
+    background: color-mix(in srgb, var(--rule) 20%, var(--paper-card));
+    border-color: var(--ink); transform: translateY(-5px) rotate(.4deg); box-shadow: var(--sh-3); z-index: 4;
+  }
+  .blockcard .num { display: block; font-family: var(--mono); font-size: .68rem; letter-spacing: .08em; color: var(--ink-soft); }
+  .blockcard .hash { display: block; font-family: var(--mono); font-size: .74rem; margin-top: 9px; word-break: break-all; color: var(--ink); line-height: 1.5; }
+  .blockcard .payload { display: block; font-style: italic; font-size: .8rem; color: var(--ink-soft); margin-top: 8px; border-top: 1px dotted var(--line); padding-top: 7px; }
+  .blockcard .stamp {
+    position: absolute; top: -12px; right: -10px;
+    width: 38px; height: 38px; border-radius: 50%;
+    color: var(--paper); display: flex; align-items: center; justify-content: center;
+    font-size: .95rem; border: none;
+    transform: rotate(-11deg) scale(0);
+    background: radial-gradient(circle at 32% 28%, var(--stamp-soft), var(--stamp) 70%);
+    box-shadow: 0 2px 4px rgba(0,0,0,.25);
+    animation: stampIn .35s var(--ease) forwards;
+    transition: transform .3s var(--ease), background .3s ease, color .3s ease;
+  }
+  .blockcard:hover .stamp { transform: rotate(4deg) scale(1.08); }
+  .blockcard.genesis .payload { color: var(--verify); }
+  .blockcard.broken { border-style: dashed; border-color: var(--stamp); background: color-mix(in srgb, var(--stamp) 8%, var(--paper-card)); }
+  .blockcard.broken .stamp {
+    background: none; color: var(--stamp);
+    border: 1.5px dashed var(--stamp); box-shadow: none;
+    transform: rotate(-24deg) scale(1);
+  }
+  .blockcard.broken .hash { color: var(--stamp); }
+  .blockcard.edited { border-color: var(--stamp); box-shadow: 0 0 0 3px color-mix(in srgb, var(--stamp) 14%, transparent); }
+  .blockcard.edited .payload { color: var(--stamp); font-weight: 600; }
+  .blockcard.edited .stamp {
+    background: none; color: var(--stamp); border: 1.5px dashed var(--stamp);
+    box-shadow: none; transform: rotate(-18deg) scale(1);
+  }
+  .blockcard.edited::after {
+    content: "altered"; position: absolute; bottom: -9px; left: 12px;
+    font-family: var(--mono); font-size: .54rem; letter-spacing: .14em; text-transform: uppercase;
+    background: var(--stamp); color: var(--paper); padding: 1px 6px; border-radius: 2px;
+  }
+  .blockcard.flash { animation: flash .6s ease; }
+  @keyframes flash { 0%,100% { background: var(--paper-card); } 40% { background: color-mix(in srgb, var(--rule) 45%, var(--paper-card)); } }
+  @keyframes blockIn { to { opacity: 1; transform: translateY(0) scale(1); } }
+  @keyframes stampIn { to { transform: rotate(-11deg) scale(1); } }
+  @keyframes fadeIn { to { opacity: 1; } }
+
+  .link {
+    width: 34px; height: 1.5px; background: var(--line); flex: none;
+    opacity: 0; animation: fadeIn .4s ease forwards; position: relative;
+  }
+  .link::after {
+    content: "◆"; position: absolute; left: 50%; top: 50%;
+    transform: translate(-50%, -55%); font-size: .42rem; color: var(--rule);
+    transition: transform .3s var(--ease), color .3s ease;
+  }
+  .link.lit { background: var(--verify-soft); }
+  .link.lit::after { color: var(--verify); transform: translate(-50%, -55%) scale(1.8) rotate(45deg); }
+  .link.cut { background: repeating-linear-gradient(90deg, var(--stamp) 0 3px, transparent 3px 6px); }
+  .link.cut::after { content: "✕"; color: var(--stamp); font-size: .5rem; }
+  .link.pulse::before {
+    content: ""; position: absolute; top: -2px; left: 0;
+    width: 5px; height: 5px; border-radius: 50%; background: var(--stamp);
+    animation: travel .45s linear;
+  }
+  @keyframes travel { from { left: -4px; opacity: 1; } to { left: 34px; opacity: 0; } }
+
+  .block-detail {
+    margin-top: 16px; border: 1px solid var(--line); border-radius: 3px;
+    background: var(--paper); padding: 0 18px; overflow: hidden;
+    max-height: 0; opacity: 0;
+    transition: max-height .45s var(--ease), opacity .3s ease, padding .35s var(--ease);
+  }
+  .block-detail.open { max-height: 460px; opacity: 1; padding: 16px 18px; }
+  .block-detail dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 16px; margin: 0; }
+  .block-detail dt { font-variant: small-caps; letter-spacing: .05em; color: var(--ink-soft); font-size: .84rem; }
+  .block-detail dd { margin: 0; font-family: var(--mono); font-size: .78rem; word-break: break-all; }
+  .block-detail .verdict { margin-top: 12px; font-style: italic; font-size: .9rem; }
+  .block-detail .verdict.ok { color: var(--verify); }
+  .block-detail .verdict.bad { color: var(--stamp); }
+  .chain-note {
+    margin-top: 12px; font-style: italic; color: var(--ink-soft); font-size: .92rem;
+    min-height: 1.5em; border-left: 2px solid var(--line); padding-left: 12px;
+  }
+  .chain-note strong { font-style: normal; color: var(--ink); }
+  .demo-tag {
+    display: inline-block; white-space: nowrap;
+    font-family: var(--mono); font-size: .6rem; letter-spacing: .12em; text-transform: uppercase;
+    color: var(--paper); background: var(--verify); padding: 2px 8px; border-radius: 2px;
+  }
+  @media (max-width: 620px) {
+    .blockcard { width: 148px; }
+    .link { width: 24px; }
+  }
+
+  /* the top bar folds onto two rows before it ever clips a control */
+  @media (max-width: 720px) {
+    .wrap { padding: 0 18px; }
+    .topbar { flex-wrap: wrap; gap: 8px 12px; padding-bottom: 8px; }
+    .nav-scroll { order: 3; flex: 1 0 100%; }
+    .topbar nav { padding: 2px 0 0; gap: 16px; font-size: .86rem; }
+    .brand { font-size: 1.06rem; }
+    .brand .folio-chip { font-size: .56rem; }
+    .icon-btn { padding: 4px 11px; font-size: .78rem; }
+    .hero { padding-top: 44px; }
+  }
+  @media (max-width: 560px) {
+    /* the running folio number is a luxury; the controls are not */
+    .brand .folio-chip { display: none; }
+  }
+
+  /* ---------- ledger entries ---------- */
+  .ledger { padding: 10px 0 40px; }
+  .entry {
+    display: grid; grid-template-columns: 90px 1fr; gap: 28px;
+    padding: 50px 0 18px; position: relative;
+  }
+  .entry::before {
+    content: "❦"; position: absolute; top: 14px; left: 0; right: 0;
+    text-align: center; color: var(--rule); font-size: 1rem;
+  }
+  .entry:first-child { padding-top: 8px; }
+  .entry:first-child::before { content: none; }
+  .entry .folio-col { padding-top: 4px; display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+  .entry .folio-num {
+    font-family: var(--display); font-style: italic; font-size: 1.5rem; color: var(--stamp-soft);
+    line-height: 1; cursor: default; transition: transform .3s var(--ease), color .3s ease;
+  }
+  .entry:hover .folio-num { transform: translateX(3px) rotate(-4deg); color: var(--stamp); }
+  .entry h2 { font-size: 1.6rem; font-weight: 600; font-style: italic; margin-bottom: 14px; }
+  .entry p { color: var(--ink-soft); margin: 0 0 12px; max-width: 58ch; }
+  .entry p:last-child { margin-bottom: 0; }
+  .entry .keyword { color: var(--stamp); font-weight: 600; }
+  @media (max-width: 720px) {
+    .entry { grid-template-columns: 1fr; gap: 10px; }
+    .entry .folio-col { padding-top: 0; flex-direction: row; align-items: center; gap: 12px; }
+  }
+
+  /* ---------- clickable inline terms ---------- */
+  .term {
+    font: inherit; color: var(--stamp); background: none; border: 0;
+    padding: 0 2px; margin: 0 -1px; cursor: pointer; font-weight: 600;
+    border-bottom: 1px dotted var(--stamp-soft); border-radius: 2px;
+    transition: background .2s ease, color .2s ease, border-color .2s ease;
+  }
+  .term::after { content: "✦"; font-size: .5em; vertical-align: super; color: var(--rule); margin-left: 2px; }
+  .term:hover { background: var(--tint-strong); border-bottom-style: solid; }
+  .term[aria-expanded="true"] { background: color-mix(in srgb, var(--stamp) 16%, transparent); border-bottom-color: var(--stamp); }
+
+  .popover {
+    position: fixed; z-index: 70; width: min(330px, calc(100vw - 24px));
+    background: var(--paper); border: 1px solid var(--rule); border-radius: 4px;
+    box-shadow: var(--sh-3); padding: 16px 18px 14px;
+    opacity: 0; transform: translateY(8px) scale(.98); pointer-events: none;
+    transition: opacity .22s ease, transform .26s var(--ease);
+  }
+  .popover.open { opacity: 1; transform: none; pointer-events: auto; }
+  .popover::before { content: ""; position: absolute; inset: 5px; border: 1px solid var(--line-soft); pointer-events: none; border-radius: 2px; }
+  .popover h4 { font-size: .78rem; font-variant: small-caps; letter-spacing: .14em; color: var(--stamp-soft); font-family: var(--serif); font-weight: 600; }
+  .popover .def { margin: 8px 0 0; font-size: .96rem; }
+  .popover .analogy { margin: 10px 0 0; font-style: italic; font-size: .9rem; color: var(--ink-soft); border-left: 2px solid var(--line); padding-left: 10px; }
+  .popover .why { margin: 10px 0 0; font-size: .86rem; color: var(--ink-soft); }
+  .popover .why b { color: var(--ink); font-weight: 600; font-variant: small-caps; letter-spacing: .06em; }
+  .popover .pop-close {
+    position: absolute; top: 6px; right: 8px; border: 0; background: none;
+    color: var(--ink-soft); cursor: pointer; font-size: 1rem; line-height: 1; padding: 4px;
+  }
+  .popover .pop-close:hover { color: var(--stamp); }
+
+  /* ---------- panels / cards shared ---------- */
+  .panel {
+    border: 1px solid var(--rule); border-radius: 4px;
+    background: color-mix(in srgb, var(--paper-card) 50%, var(--paper));
+    padding: 24px; position: relative; box-shadow: var(--sh-1);
+  }
+  .panel.tight { padding: 18px; }
+  .card {
+    border: 1px solid var(--line); border-radius: 3px; background: var(--paper-card);
+    padding: 18px; position: relative; text-align: left; color: inherit; font: inherit;
+    cursor: pointer; box-shadow: var(--sh-1);
+    transition: transform .3s var(--ease), box-shadow .3s ease, border-color .25s ease, background .25s ease;
+  }
+  .card:hover { transform: translateY(-4px); box-shadow: var(--sh-3); border-color: var(--rule); background: var(--card-hi); }
+  .card:active { transform: translateY(-1px) scale(.995); }
+  .card h3, .card h4 { font-style: italic; font-size: 1.05rem; margin-bottom: 6px; }
+  .card p { margin: 0; color: var(--ink-soft); font-size: .93rem; }
+  .grid { display: grid; gap: 16px; }
+  .grid.g2 { grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); }
+  .grid.g3 { grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); }
+
+  /* section wrapper */
+  .band { padding: 58px 0; border-top: 2px solid var(--rule); position: relative; }
+  .band::after {
+    content: ""; position: absolute; left: 0; right: 0; top: 5px; height: 1px;
+    background: var(--rule); opacity: .5;
+  }
+  .band > .wrap-inner { position: relative; }
+  .lede-2 { color: var(--ink-soft); max-width: 58ch; margin: 0 0 24px; }
+
+  /* ---------- hash laboratory ---------- */
+  .hashlab { margin-top: 20px; }
+  .hashlab .row { display: flex; align-items: center; gap: 14px; flex-wrap: wrap; }
+  .hashlab label { font-variant: small-caps; letter-spacing: .06em; font-size: .86rem; color: var(--ink-soft); }
+  .field {
+    font-family: var(--serif); font-size: 1rem; color: var(--ink);
+    background: var(--paper); border: 1px solid var(--line); border-radius: 3px;
+    padding: 9px 12px; min-width: 0; width: 100%;
+    transition: border-color .2s ease, box-shadow .2s ease;
+  }
+  .field:focus { border-color: var(--verify); box-shadow: 0 0 0 3px color-mix(in srgb, var(--verify) 18%, transparent); outline: none; }
+  .hash-arrow { color: var(--rule); font-size: 1.1rem; animation: nudge 2.2s ease-in-out infinite; }
+  @keyframes nudge { 0%,100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
+  .hash-out {
+    font-family: var(--mono); font-size: .86rem; color: var(--verify);
+    background: color-mix(in srgb, var(--verify) 10%, transparent);
+    border: 1px dashed var(--verify-soft); border-radius: 3px;
+    padding: 9px 12px; word-break: break-all; flex: 1 1 260px;
+  }
+  .hash-out .ch { display: inline-block; transition: color .3s ease, transform .3s var(--ease); }
+  .hash-out .ch.changed { color: var(--stamp); transform: translateY(-3px) scale(1.15); }
+
+  /* ---------- concept map ---------- */
+  .cmap-shell { display: grid; grid-template-columns: 1.05fr .95fr; gap: 26px; align-items: start; }
+  .cmap { position: relative; min-height: 340px; }
+  .cmap-lines { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; overflow: visible; }
+  .cmap-lines path { fill: none; stroke: var(--line); stroke-width: 1.4; transition: stroke .35s ease, stroke-width .35s ease, opacity .35s ease; }
+  .cmap-lines path.on { stroke: var(--verify); stroke-width: 2.4; stroke-dasharray: 6 5; animation: march 1.4s linear infinite; }
+  .cmap-lines path.dim { opacity: .25; }
+  @keyframes march { to { stroke-dashoffset: -22; } }
+  .cmap-nodes {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px 10px;
+    grid-template-areas: ". bc ." "wl . cr" ". sc ." "nf . da" ". ap .";
+    position: relative; z-index: 2;
+  }
+  .cnode {
+    grid-area: var(--area);
+    border: 1px solid var(--rule); background: var(--paper-card);
+    border-radius: 999px; padding: 10px 6px; cursor: pointer;
+    font-family: var(--serif); font-variant: small-caps; letter-spacing: .07em;
+    font-size: .86rem; color: var(--ink); text-align: center;
+    box-shadow: var(--sh-1); position: relative;
+    transition: transform .3s var(--ease), box-shadow .3s ease, background .3s ease, color .3s ease, border-color .3s ease;
+  }
+  .cnode:hover { transform: translateY(-3px) scale(1.04); box-shadow: var(--sh-2); border-color: var(--ink-soft); }
+  .cnode[aria-pressed="true"] {
+    background: var(--verify); color: var(--paper); border-color: var(--verify);
+    box-shadow: 0 0 0 5px color-mix(in srgb, var(--verify) 18%, transparent);
+    transform: scale(1.07);
+  }
+  .cnode[aria-pressed="true"]::after {
+    content: ""; position: absolute; inset: -9px; border: 1px dashed var(--verify-soft);
+    border-radius: 999px; animation: spin 14s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .cnode.dim { opacity: .45; }
+  .cmap-panel { border: 1px solid var(--rule); border-radius: 4px; background: var(--paper-card); padding: 22px; min-height: 260px; position: relative; }
+  .cmap-panel::before { content: ""; position: absolute; inset: 6px; border: 1px solid var(--line-soft); pointer-events: none; }
+  .cmap-panel h3 { font-size: 1.2rem; font-style: italic; }
+  .cmap-panel .kicker { font-family: var(--mono); font-size: .62rem; letter-spacing: .14em; text-transform: uppercase; color: var(--stamp-soft); }
+  .cmap-panel .body { margin-top: 10px; color: var(--ink-soft); }
+  .cmap-panel .sub { margin-top: 14px; }
+  .cmap-panel .sub b { font-variant: small-caps; letter-spacing: .07em; color: var(--ink); font-size: .84rem; display: block; }
+  .cmap-panel .sub span { color: var(--ink-soft); font-size: .93rem; font-style: italic; }
+  .cmap-panel .links { margin-top: 16px; display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip {
+    font-family: var(--serif); font-size: .78rem; font-variant: small-caps; letter-spacing: .05em;
+    border: 1px solid var(--line); background: transparent; color: var(--ink-soft);
+    padding: 3px 11px; border-radius: 999px; cursor: pointer;
+    transition: background .2s ease, color .2s ease, transform .2s var(--ease), border-color .2s ease;
+  }
+  .chip:hover { background: var(--rule); color: var(--paper); border-color: var(--rule); transform: translateY(-1px); }
+  .fade-swap { animation: fadeSwap .4s var(--ease); }
+  @keyframes fadeSwap { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @media (max-width: 860px) {
+    .cmap-shell { grid-template-columns: 1fr; }
+    .cmap-nodes { grid-template-columns: 1fr; grid-template-areas: "bc" "wl" "cr" "sc" "nf" "da" "ap"; gap: 12px; }
+    .cmap { min-height: 0; }
+  }
+
+  /* ---------- history timeline ---------- */
+  .timeline { position: relative; margin-top: 8px; }
+  .tl-rail-wrap { overflow-x: auto; padding: 26px 0 10px; scrollbar-width: thin; }
+  .tl-rail { position: relative; display: flex; min-width: max-content; gap: 0; padding: 0 6px; }
+  .tl-rail::before {
+    content: ""; position: absolute; left: 0; right: 0; top: 13px; height: 2px;
+    background: repeating-linear-gradient(90deg, var(--line) 0 8px, transparent 8px 13px);
+  }
+  .tl-fill {
+    position: absolute; left: 0; top: 13px; height: 2px; width: 0;
+    background: var(--verify); transition: width .6s var(--ease); z-index: 1;
+  }
+  .tl-item { position: relative; z-index: 2; width: 124px; flex: none; text-align: center; background: none; border: 0; cursor: pointer; padding: 0; color: inherit; font: inherit; }
+  .tl-dot {
+    display: block; width: 15px; height: 15px; border-radius: 50%; margin: 6px auto 10px;
+    background: var(--paper); border: 2px solid var(--rule);
+    transition: transform .3s var(--ease), background .3s ease, border-color .3s ease, box-shadow .3s ease;
+  }
+  .tl-item:hover .tl-dot { transform: scale(1.3); border-color: var(--ink); }
+  .tl-item[aria-pressed="true"] .tl-dot {
+    background: var(--stamp); border-color: var(--stamp); transform: scale(1.45);
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--stamp) 16%, transparent);
+  }
+  .tl-item.done .tl-dot { background: var(--verify-soft); border-color: var(--verify); }
+  .tl-year { display: block; font-family: var(--mono); font-size: .76rem; letter-spacing: .04em; color: var(--ink-soft); transition: color .3s ease, transform .3s var(--ease); }
+  .tl-item[aria-pressed="true"] .tl-year { color: var(--stamp); transform: translateY(-2px); font-weight: 700; }
+  .tl-cap { display: block; font-size: .8rem; font-style: italic; color: var(--ink-soft); margin-top: 3px; line-height: 1.35; padding: 0 6px; }
+  .tl-detail {
+    margin-top: 18px; border: 1px solid var(--rule); border-radius: 4px;
+    background: var(--paper-card); padding: 22px 24px; position: relative;
+    background-image: repeating-linear-gradient(to bottom, transparent 0 30px, var(--line-soft) 30px 31px);
+  }
+  .tl-detail::after {
+    content: ""; position: absolute; left: 34px; top: 0; bottom: 0; width: 1px;
+    background: color-mix(in srgb, var(--stamp) 35%, transparent);
+  }
+  .tl-detail .inner { padding-left: 24px; }
+  .tl-detail h3 { font-size: 1.24rem; font-style: italic; }
+  .tl-detail .yr { font-family: var(--mono); font-size: .72rem; letter-spacing: .14em; color: var(--stamp-soft); }
+  .tl-detail p { color: var(--ink-soft); margin: 10px 0 0; max-width: 62ch; }
+  .tl-nav { display: flex; gap: 10px; align-items: center; margin-top: 16px; }
+
+  /* ---------- web2 vs web3 ---------- */
+  .versus { display: grid; grid-template-columns: 1fr auto 1fr; gap: 0 18px; align-items: stretch; }
+  .versus-col { border: 1px solid var(--rule); border-radius: 4px; background: var(--paper-card); overflow: hidden; }
+  .versus-col header {
+    padding: 12px 18px; border-bottom: 1px solid var(--line);
+    font-family: var(--display); font-style: italic; font-size: 1.1rem;
+    background: color-mix(in srgb, var(--rule) 14%, transparent);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .versus-col header .tag { font-family: var(--mono); font-size: .6rem; letter-spacing: .12em; color: var(--ink-soft); }
+  .vrow {
+    width: 100%; text-align: left; background: none; border: 0; border-bottom: 1px dotted var(--line);
+    padding: 14px 18px; cursor: pointer; color: inherit; font: inherit;
+    transition: background .25s ease, padding-left .25s var(--ease);
+  }
+  .vrow:last-child { border-bottom: 0; }
+  .vrow:hover { background: var(--tint); padding-left: 24px; }
+  .vrow.on { background: color-mix(in srgb, var(--rule) 22%, transparent); padding-left: 24px; }
+  .vrow .k { font-variant: small-caps; letter-spacing: .08em; font-size: .78rem; color: var(--stamp-soft); display: block; }
+  .vrow .v { font-size: .95rem; color: var(--ink); }
+  .versus-mid { display: flex; align-items: center; justify-content: center; }
+  .versus-mid span {
+    font-family: var(--display); font-style: italic; color: var(--rule); font-size: 1.4rem;
+    writing-mode: vertical-rl; letter-spacing: .1em;
+  }
+  .nuance {
+    margin-top: 18px; border-left: 3px solid var(--stamp-soft); background: var(--tint);
+    padding: 14px 18px; border-radius: 0 3px 3px 0; min-height: 4.4em;
+  }
+  .nuance .k { font-variant: small-caps; letter-spacing: .1em; font-size: .76rem; color: var(--stamp); }
+  .nuance p { margin: 4px 0 0; color: var(--ink-soft); font-size: .95rem; }
+  @media (max-width: 760px) {
+    .versus { grid-template-columns: 1fr; gap: 14px; }
+    .versus-mid span { writing-mode: horizontal-tb; }
+  }
+
+  /* ---------- wallet anatomy ---------- */
+  .wa-shell { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; align-items: start; }
+  .wa-steps { display: flex; flex-direction: column; gap: 0; }
+  .wa-step {
+    display: flex; gap: 14px; align-items: flex-start; text-align: left;
+    background: none; border: 0; padding: 12px 14px; cursor: pointer; color: inherit; font: inherit;
+    border: 1px solid transparent; border-radius: 3px; position: relative;
+    transition: background .25s ease, border-color .25s ease, transform .25s var(--ease);
+  }
+  .wa-step:not(:last-child)::after {
+    content: ""; position: absolute; left: 31px; top: 46px; bottom: -6px; width: 1px;
+    background: var(--line);
+  }
+  .wa-step:hover { background: var(--tint); transform: translateX(3px); }
+  .wa-step[aria-pressed="true"] { background: var(--paper-card); border-color: var(--rule); }
+  .wa-icon {
+    width: 34px; height: 34px; flex: none; border-radius: 50%;
+    border: 1px solid var(--rule); display: grid; place-items: center;
+    font-size: .95rem; background: var(--paper); color: var(--ink-soft);
+    transition: background .3s ease, color .3s ease, transform .35s var(--ease);
+  }
+  .wa-step[aria-pressed="true"] .wa-icon { background: var(--verify); color: var(--paper); border-color: var(--verify); transform: rotate(-8deg) scale(1.08); }
+  .wa-step .t { font-variant: small-caps; letter-spacing: .06em; font-size: .98rem; }
+  .wa-step .s { font-size: .84rem; color: var(--ink-soft); font-style: italic; }
+  .wa-panel { border: 1px solid var(--rule); border-radius: 4px; background: var(--paper-card); padding: 22px; }
+  .wa-panel h3 { font-style: italic; font-size: 1.15rem; }
+  .wa-panel p { color: var(--ink-soft); margin: 10px 0 0; font-size: .96rem; }
+  .keyline { font-family: var(--mono); font-size: .76rem; background: var(--paper); border: 1px dashed var(--line); padding: 8px 10px; border-radius: 3px; margin-top: 12px; word-break: break-all; }
+  .sig-demo { margin-top: 16px; }
+  .sig-out { font-family: var(--mono); font-size: .74rem; color: var(--verify); margin-top: 10px; min-height: 2.4em; word-break: break-all; }
+  .sig-out.run { animation: scramble .5s steps(6) 2; }
+  @keyframes scramble { 50% { opacity: .35; letter-spacing: .08em; } }
+  @media (max-width: 800px) { .wa-shell { grid-template-columns: 1fr; } }
+
+  /* ---------- transaction journey ---------- */
+  .tx-shell { display: grid; grid-template-columns: 300px 1fr; gap: 28px; align-items: start; }
+  .tx-rail { position: relative; padding-left: 6px; }
+  .tx-rail::before {
+    content: ""; position: absolute; left: 22px; top: 18px; bottom: 18px; width: 2px;
+    background: var(--line);
+  }
+  .tx-progress {
+    position: absolute; left: 22px; top: 18px; width: 2px; height: 0;
+    background: var(--verify); transition: height .55s var(--ease); z-index: 1;
+  }
+  .tx-step {
+    position: relative; z-index: 2; display: flex; gap: 14px; align-items: center;
+    width: 100%; text-align: left; background: none; border: 0; padding: 9px 10px;
+    cursor: pointer; color: inherit; font: inherit; border-radius: 3px;
+    transition: background .25s ease, transform .25s var(--ease);
+  }
+  .tx-step:hover { background: var(--tint); transform: translateX(3px); }
+  .tx-dot {
+    width: 32px; height: 32px; flex: none; border-radius: 50%;
+    background: var(--paper); border: 2px solid var(--line);
+    display: grid; place-items: center; font-family: var(--mono); font-size: .7rem; color: var(--ink-soft);
+    transition: all .35s var(--ease);
+  }
+  .tx-step.done .tx-dot { background: var(--verify-soft); border-color: var(--verify); color: var(--paper); }
+  .tx-step.active .tx-dot {
+    background: var(--stamp); border-color: var(--stamp); color: var(--paper);
+    transform: scale(1.18); box-shadow: 0 0 0 6px color-mix(in srgb, var(--stamp) 18%, transparent);
+  }
+  .tx-step .lbl { font-variant: small-caps; letter-spacing: .06em; font-size: .95rem; color: var(--ink-soft); transition: color .3s ease; }
+  .tx-step.active .lbl, .tx-step.done .lbl { color: var(--ink); }
+  .tx-panel {
+    border: 1px solid var(--rule); border-radius: 4px; background: var(--paper-card);
+    padding: 26px; min-height: 240px; position: relative; overflow: hidden;
+  }
+  .tx-panel::before { content: ""; position: absolute; inset: 7px; border: 1px solid var(--line-soft); pointer-events: none; }
+  .tx-panel .step-n { font-family: var(--mono); font-size: .64rem; letter-spacing: .16em; color: var(--stamp-soft); text-transform: uppercase; }
+  .tx-panel h3 { font-size: 1.3rem; font-style: italic; margin-top: 6px; }
+  .tx-panel p { color: var(--ink-soft); margin: 12px 0 0; max-width: 54ch; }
+  .tx-panel .receipt {
+    margin-top: 18px; font-family: var(--mono); font-size: .74rem; color: var(--ink-soft);
+    border-top: 1px dashed var(--line); padding-top: 12px; display: grid; gap: 4px;
+  }
+  .tx-panel .receipt span b { color: var(--ink); font-weight: 400; }
+  .tx-seal {
+    position: absolute; right: 22px; bottom: 20px; width: 84px; height: 84px; border-radius: 50%;
+    border: 2px solid var(--verify); color: var(--verify);
+    display: grid; place-items: center; text-align: center; line-height: 1.15;
+    font-family: var(--serif); font-variant: small-caps; font-size: .7rem; letter-spacing: .08em;
+    transform: rotate(-14deg) scale(0); opacity: 0;
+    transition: transform .5s var(--ease), opacity .4s ease;
+  }
+  .tx-seal.on { transform: rotate(-14deg) scale(1); opacity: .95; }
+  @media (max-width: 800px) { .tx-shell { grid-template-columns: 1fr; } }
+
+  /* ---------- gas ---------- */
+  .gas-shell { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: center; }
+  .gas-bars { display: flex; align-items: flex-end; gap: 5px; height: 130px; border-bottom: 1px solid var(--line); padding-bottom: 2px; }
+  .gas-bar { flex: 1; background: var(--verify-soft); border-radius: 2px 2px 0 0; transition: height .4s var(--ease), background .4s ease; min-height: 3px; }
+  .gas-bar.hot { background: var(--stamp-soft); }
+  .gas-read { font-family: var(--mono); font-size: 2rem; color: var(--stamp); line-height: 1.1; }
+  .gas-read small { font-size: .8rem; color: var(--ink-soft); letter-spacing: .1em; }
+  input[type="range"] {
+    -webkit-appearance: none; appearance: none; width: 100%; height: 3px;
+    background: var(--line); border-radius: 99px; outline: none; margin: 16px 0 6px;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 22px; height: 22px; border-radius: 50%;
+    background: radial-gradient(circle at 32% 28%, var(--stamp-soft), var(--stamp) 70%);
+    border: 2px solid var(--paper); box-shadow: var(--sh-2); cursor: grab;
+    transition: transform .2s var(--ease);
+  }
+  input[type="range"]::-webkit-slider-thumb:active { cursor: grabbing; transform: scale(1.15); }
+  input[type="range"]::-moz-range-thumb {
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--stamp); border: 2px solid var(--paper); cursor: grab;
+  }
+  .gas-flow { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-top: 16px; font-size: .86rem; color: var(--ink-soft); }
+  .gas-flow .node { border: 1px solid var(--line); border-radius: 3px; padding: 6px 12px; background: var(--paper); font-variant: small-caps; letter-spacing: .05em; }
+  @media (max-width: 760px) { .gas-shell { grid-template-columns: 1fr; } }
+
+  /* ---------- dapps ---------- */
+  .dapp { min-height: 168px; }
+  .dapp .glyph { display: block; color: var(--rule); font-size: 1.5rem; line-height: 1; }
+  .dapp .h { display: block; font-family: var(--display); font-style: italic; font-size: 1.05rem; margin: 6px 0; }
+  .dapp .p { display: block; color: var(--ink-soft); font-size: .93rem; }
+  .dapp .more {
+    display: block; max-height: 0; overflow: hidden; opacity: 0;
+    transition: max-height .4s var(--ease), opacity .3s ease, margin .3s ease;
+  }
+  .dapp[aria-expanded="true"] { background: var(--card-hi); border-color: var(--rule); }
+  .dapp[aria-expanded="true"] .more { max-height: 300px; opacity: 1; margin-top: 10px; }
+  .dapp .li { display: block; position: relative; padding-left: 15px; margin-top: 5px; color: var(--ink-soft); font-size: .88rem; }
+  .dapp .li::before { content: "▪"; position: absolute; left: 0; color: var(--rule); }
+  .dapp .caveat { display: block; font-style: italic; font-size: .84rem; color: var(--stamp-soft); margin-top: 10px; border-top: 1px dotted var(--line); padding-top: 8px; }
+  .dapp .toggle-hint { font-family: var(--mono); font-size: .6rem; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-soft); margin-top: 12px; display: block; }
+  .dapp[aria-expanded="true"] .toggle-hint { color: var(--verify); }
+
+  /* ---------- code ---------- */
+  .codebox { border: 1px solid var(--rule); border-radius: 4px; background: var(--paper-card); overflow: hidden; box-shadow: var(--sh-1); }
+  .codebox header {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 10px 16px; border-bottom: 1px solid var(--line);
+    background: color-mix(in srgb, var(--rule) 14%, transparent);
+  }
+  .codebox header .fname { font-family: var(--mono); font-size: .76rem; color: var(--ink-soft); letter-spacing: .02em; }
+  .code-scroll { overflow-x: auto; padding: 14px 0; background-image: repeating-linear-gradient(to bottom, transparent 0 25px, color-mix(in srgb, var(--rule) 7%, transparent) 25px 50px); }
+  .codebox pre { margin: 0; font-family: var(--mono); font-size: .82rem; line-height: 25px; }
+  .cl { display: flex; padding: 0 16px; transition: background .2s ease; }
+  .cl:hover { background: var(--tint); }
+  .cl .ln {
+    flex: none; width: 32px; text-align: right; padding-right: 14px; color: var(--ink-soft);
+    opacity: .55; user-select: none; border-right: 1px solid var(--line-soft); margin-right: 14px;
+  }
+  .cl .code { white-space: pre; }
+  .tk-kw { color: var(--stamp); font-weight: 700; }
+  .tk-str { color: var(--verify); }
+  .tk-com { color: var(--ink-soft); font-style: italic; opacity: .85; }
+  .tk-fn { color: var(--ink); font-weight: 700; }
+  .tk-num { color: var(--rule); font-weight: 700; }
+  .copy-btn { position: relative; }
+  .copy-btn.done { background: var(--verify); border-color: var(--verify); color: var(--paper); }
+  .copy-flash {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    background: var(--verify); color: var(--paper); border-radius: 999px;
+    opacity: 0; transform: scale(.85); pointer-events: none;
+    transition: opacity .25s ease, transform .3s var(--ease);
+  }
+  .copy-flash.on { opacity: 1; transform: scale(1); }
+  details.explainer { margin-top: 0; border-top: 1px solid var(--line); }
+  details.explainer summary {
+    cursor: pointer; padding: 12px 16px; font-variant: small-caps; letter-spacing: .06em;
+    font-size: .9rem; color: var(--ink-soft); list-style: none; display: flex; align-items: center; gap: 8px;
+    transition: background .2s ease, color .2s ease;
+  }
+  details.explainer summary::-webkit-details-marker { display: none; }
+  details.explainer summary::before { content: "▸"; color: var(--rule); transition: transform .3s var(--ease); }
+  details.explainer[open] summary::before { transform: rotate(90deg); }
+  details.explainer summary:hover { background: var(--tint); color: var(--ink); }
+  details.explainer .exp-body { padding: 4px 16px 18px; }
+  details.explainer ol { margin: 0; padding-left: 20px; color: var(--ink-soft); font-size: .93rem; }
+  details.explainer ol li { margin-bottom: 7px; }
+  details.explainer code { font-family: var(--mono); font-size: .8rem; color: var(--stamp); background: var(--tint); padding: 1px 5px; border-radius: 2px; }
+
+  /* ---------- myths ---------- */
+  .myth { perspective: 1200px; background: none; border: 0; padding: 0; cursor: pointer; min-height: 210px; }
+  .myth-inner {
+    display: block; position: relative; width: 100%; height: 100%; min-height: 210px;
+    transform-style: preserve-3d; transition: transform .7s var(--ease);
+  }
+  .myth[aria-pressed="true"] .myth-inner { transform: rotateY(180deg); }
+  .myth-face {
+    position: absolute; inset: 0; backface-visibility: hidden;
+    border: 1px solid var(--rule); border-radius: 3px; padding: 20px;
+    display: flex; flex-direction: column; justify-content: center; text-align: left;
+    box-shadow: var(--sh-1);
+  }
+  .myth-front { background: var(--paper-card); }
+  .myth-back { background: color-mix(in srgb, var(--verify) 12%, var(--paper-card)); transform: rotateY(180deg); border-color: var(--verify-soft); }
+  .myth .tagline { font-family: var(--mono); font-size: .62rem; letter-spacing: .16em; text-transform: uppercase; }
+  .myth-front .tagline { color: var(--stamp); }
+  .myth-back .tagline { color: var(--verify); }
+  .myth .txt { margin-top: 10px; font-family: var(--display); font-style: italic; font-size: 1.04rem; line-height: 1.4; }
+  .myth-back .txt { font-family: var(--serif); font-style: normal; font-size: .95rem; color: var(--ink-soft); }
+  .myth .flip-hint { margin-top: auto; padding-top: 12px; font-size: .74rem; color: var(--ink-soft); font-variant: small-caps; letter-spacing: .08em; }
+  .myth:hover .myth-face { box-shadow: var(--sh-3); }
+
+  /* ---------- wallet connect ---------- */
+  .wallet-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 26px; align-items: start; }
+  .wallet-box {
+    background: var(--paper-card); border: 1px solid var(--rule); border-radius: 3px;
+    padding: 28px 26px; position: relative;
+  }
+  .wallet-box::before { content: ""; position: absolute; inset: 7px; border: 1px solid var(--line-soft); pointer-events: none; }
+  .wallet-box h3 { font-size: 1.2rem; font-style: italic; margin-bottom: 8px; }
+  .wallet-box > p { color: var(--ink-soft); margin: 0 0 18px; font-size: .95rem; }
+  .wallet-seq { list-style: none; margin: 18px 0 0; padding: 0; display: grid; gap: 9px; }
+  .wallet-seq li {
+    display: flex; align-items: center; gap: 11px; font-size: .9rem; color: var(--ink-soft);
+    opacity: .4; transition: opacity .35s ease, color .35s ease, transform .35s var(--ease);
+  }
+  .wallet-seq li .tick {
+    width: 20px; height: 20px; border-radius: 50%; border: 1px solid var(--line); flex: none;
+    display: grid; place-items: center; font-size: .66rem; color: transparent;
+    transition: all .35s var(--ease);
+  }
+  .wallet-seq li.run { opacity: 1; color: var(--ink); }
+  .wallet-seq li.run .tick { border-color: var(--rule); color: var(--rule); animation: pulseRing 1.1s ease-in-out infinite; }
+  .wallet-seq li.run .tick::after { content: "•"; }
+  .wallet-seq li.ok { opacity: 1; color: var(--ink); }
+  .wallet-seq li.ok .tick { background: var(--verify); border-color: var(--verify); color: var(--paper); }
+  .wallet-seq li.ok .tick::after { content: "✓"; }
+  .wallet-seq li.bad { opacity: 1; color: var(--stamp); }
+  .wallet-seq li.bad .tick { border-color: var(--stamp); color: var(--stamp); }
+  .wallet-seq li.bad .tick::after { content: "✕"; }
+  @keyframes pulseRing { 50% { box-shadow: 0 0 0 5px color-mix(in srgb, var(--rule) 22%, transparent); } }
+  .wallet-status { margin-top: 16px; font-style: italic; font-size: .92rem; min-height: 1.4em; }
+  .wallet-status.ok { color: var(--verify-soft); }
+  .wallet-status.err { color: var(--stamp-soft); }
+
+  .wcard {
+    border: 1px solid var(--rule); border-radius: 4px; background: var(--paper-card);
+    padding: 22px; position: relative; overflow: hidden;
+    transition: transform .3s var(--ease), box-shadow .3s ease;
+    background-image: repeating-linear-gradient(135deg, transparent 0 14px, color-mix(in srgb, var(--rule) 6%, transparent) 14px 15px);
+  }
+  .wcard::before { content: ""; position: absolute; inset: 6px; border: 1px solid var(--line-soft); pointer-events: none; }
+  .wcard .wc-head { display: flex; justify-content: space-between; align-items: baseline; gap: 10px; }
+  .wcard .wc-title { font-family: var(--display); font-style: italic; font-size: 1.02rem; }
+  .wcard .wc-tag { font-family: var(--mono); font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
+  .wcard .addr-btn {
+    margin-top: 16px; width: 100%; text-align: left; font-family: var(--mono); font-size: .88rem;
+    background: var(--paper); border: 1px dashed var(--line); border-radius: 3px;
+    padding: 11px 13px; cursor: pointer; color: var(--ink); position: relative;
+    transition: border-color .25s ease, background .25s ease, transform .2s var(--ease);
+  }
+  .wcard .addr-btn:hover { border-color: var(--verify); background: var(--card-hi); transform: translateY(-1px); }
+  .wcard .addr-btn .hint { float: right; font-size: .62rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
+  .wcard dl { display: grid; grid-template-columns: auto 1fr; gap: 6px 14px; margin: 16px 0 0; font-size: .84rem; }
+  .wcard dt { font-variant: small-caps; letter-spacing: .06em; color: var(--ink-soft); font-family: var(--serif); }
+  .wcard dd { margin: 0; font-family: var(--mono); font-size: .78rem; }
+  .wcard .seal-big {
+    position: absolute; right: -18px; bottom: -18px; width: 108px; height: 108px; border-radius: 50%;
+    background: radial-gradient(circle at 32% 28%, var(--verify-soft), var(--verify) 72%);
+    color: var(--paper); display: grid; place-items: center; text-align: center;
+    font-variant: small-caps; font-size: .66rem; letter-spacing: .06em; line-height: 1.2;
+    transform: rotate(-16deg) scale(0); opacity: 0;
+    transition: transform .55s var(--ease), opacity .4s ease;
+  }
+  .wcard.live .seal-big { transform: rotate(-16deg) scale(1); opacity: 1; }
+  .wcard.idle { opacity: .72; }
+  .wcard.idle .addr-btn { pointer-events: none; color: var(--ink-soft); }
+
+  /* ---------- learned board ---------- */
+  .board {
+    border: 2px solid var(--rule); border-radius: 4px; padding: 30px 26px;
+    background: var(--paper-card); position: relative;
+  }
+  .board::before { content: ""; position: absolute; inset: 8px; border: 1px solid var(--line); pointer-events: none; }
+  .board::after {
+    content: "❦"; position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+    background: var(--paper); padding: 0 12px; color: var(--rule);
+  }
+  .board-head { text-align: center; margin-bottom: 22px; }
+  .board-head h3 { font-size: 1.5rem; font-style: italic; }
+  .board-head .sub { font-family: var(--mono); font-size: .64rem; letter-spacing: .18em; text-transform: uppercase; color: var(--ink-soft); margin-top: 6px; }
+  .learn-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+  .lchip {
+    position: relative; border: 1px solid var(--line); border-radius: 3px; background: var(--paper);
+    padding: 14px 12px; cursor: pointer; text-align: center; color: var(--ink-soft); font: inherit;
+    font-variant: small-caps; letter-spacing: .06em; font-size: .95rem; overflow: hidden;
+    transition: transform .25s var(--ease), border-color .25s ease, color .25s ease, background .25s ease;
+  }
+  .lchip:hover { transform: translateY(-3px); border-color: var(--rule); color: var(--ink); }
+  .lchip .mark {
+    position: absolute; inset: 0; display: grid; place-items: center;
+    color: var(--stamp); font-size: 2.6rem; opacity: 0; transform: rotate(-18deg) scale(2.2);
+    transition: opacity .35s ease, transform .45s var(--ease);
+    pointer-events: none;
+  }
+  .lchip[aria-pressed="true"] { border-color: var(--stamp); color: var(--ink); background: color-mix(in srgb, var(--stamp) 8%, var(--paper)); }
+  .lchip[aria-pressed="true"] .mark { opacity: .22; transform: rotate(-14deg) scale(1); }
+  .lchip .tickmark { color: var(--verify); opacity: 0; transition: opacity .3s ease; margin-right: 4px; }
+  .lchip[aria-pressed="true"] .tickmark { opacity: 1; }
+  .board-foot { margin-top: 20px; display: flex; align-items: center; justify-content: space-between; gap: 14px; flex-wrap: wrap; }
+  .board-foot .count { font-style: italic; color: var(--ink-soft); }
+  .board-bar { height: 4px; background: var(--line-soft); border-radius: 99px; overflow: hidden; margin-top: 14px; }
+  .board-bar i { display: block; height: 100%; width: 0; background: var(--verify); transition: width .5s var(--ease); }
+
+  /* ---------- stack builder ---------- */
+  .stack-shell { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; align-items: start; }
+  .slot { margin-bottom: 18px; }
+  .slot .slot-k { font-variant: small-caps; letter-spacing: .08em; font-size: .84rem; color: var(--stamp-soft); display: block; margin-bottom: 7px; }
+  .slot .opts { display: flex; gap: 8px; flex-wrap: wrap; }
+  .opt {
+    border: 1px solid var(--line); background: var(--paper); color: var(--ink-soft);
+    border-radius: 3px; padding: 7px 13px; cursor: pointer; font: inherit; font-size: .86rem;
+    transition: all .22s var(--ease);
+  }
+  .opt:hover { border-color: var(--rule); color: var(--ink); transform: translateY(-2px); }
+  .opt[aria-pressed="true"] { background: var(--verify); border-color: var(--verify); color: var(--paper); }
+  .stack-vis { border: 1px solid var(--rule); border-radius: 4px; background: var(--paper-card); padding: 22px; min-height: 300px; position: relative; }
+  .plate {
+    border: 1px solid var(--line); border-radius: 3px; background: var(--paper);
+    padding: 13px 16px; margin-bottom: 0; position: relative; opacity: .35;
+    transition: opacity .4s ease, transform .4s var(--ease), border-color .3s ease, background .3s ease;
+    transform: translateY(6px);
+  }
+  .plate + .plate { margin-top: 26px; }
+  .plate + .plate::before {
+    content: ""; position: absolute; left: 50%; top: -26px; height: 26px; width: 1px;
+    background: var(--line);
+  }
+  .plate.on { opacity: 1; transform: none; border-color: var(--rule); background: var(--card-hi); }
+  .plate.on + .plate::before, .plate.on::before { background: var(--verify); }
+  .plate .p-k { font-family: var(--mono); font-size: .6rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
+  .plate .p-v { font-family: var(--display); font-style: italic; font-size: 1.02rem; margin-top: 2px; }
+  .stack-sentence {
+    margin-top: 22px; padding-top: 16px; border-top: 1px dashed var(--line);
+    font-style: italic; color: var(--ink-soft); font-size: .96rem; min-height: 3em;
+  }
+  .stack-sentence b { color: var(--ink); font-style: normal; }
+  @media (max-width: 800px) { .stack-shell { grid-template-columns: 1fr; } }
+
+  /* ---------- glossary drawer ---------- */
+  .scrim {
+    position: fixed; inset: 0; background: color-mix(in srgb, var(--ink) 45%, transparent);
+    opacity: 0; pointer-events: none; transition: opacity .35s ease; z-index: 80;
+  }
+  .scrim.on { opacity: 1; pointer-events: auto; }
+  .drawer {
+    position: fixed; top: 0; right: 0; bottom: 0; width: min(420px, 92vw);
+    background: var(--paper); border-left: 2px solid var(--rule);
+    z-index: 90; transform: translateX(102%); transition: transform .45s var(--ease);
+    display: flex; flex-direction: column; box-shadow: var(--sh-3);
+  }
+  .drawer.on { transform: none; }
+  .drawer header {
+    padding: 20px 22px 14px; border-bottom: 1px solid var(--rule);
+    display: flex; align-items: flex-start; justify-content: space-between; gap: 12px;
+  }
+  .drawer header h3 { font-size: 1.25rem; font-style: italic; }
+  .drawer header .sub { font-family: var(--mono); font-size: .6rem; letter-spacing: .16em; text-transform: uppercase; color: var(--ink-soft); }
+  .drawer .search-wrap { padding: 14px 22px; border-bottom: 1px solid var(--line-soft); }
+  .drawer .list { overflow-y: auto; padding: 8px 12px 30px; flex: 1; }
+  .gitem { border-bottom: 1px dotted var(--line); }
+  .gitem button {
+    width: 100%; text-align: left; background: none; border: 0; padding: 12px 10px;
+    cursor: pointer; color: inherit; font: inherit; display: flex; justify-content: space-between; align-items: center; gap: 10px;
+    transition: background .2s ease, padding-left .2s var(--ease);
+  }
+  .gitem button:hover { background: var(--tint); padding-left: 16px; }
+  .gitem .g-t { font-variant: small-caps; letter-spacing: .07em; font-size: 1rem; }
+  .gitem .g-x { color: var(--rule); transition: transform .3s var(--ease); }
+  .gitem.open .g-x { transform: rotate(45deg); }
+  .gitem .g-body {
+    max-height: 0; overflow: hidden; opacity: 0; padding: 0 10px;
+    transition: max-height .4s var(--ease), opacity .3s ease, padding .3s ease;
+  }
+  .gitem.open .g-body { max-height: 320px; opacity: 1; padding: 0 10px 14px; }
+  .gitem .g-body p { margin: 0 0 8px; font-size: .92rem; color: var(--ink-soft); }
+  .gitem .g-body .analogy { font-style: italic; border-left: 2px solid var(--line); padding-left: 10px; }
+  .gempty { padding: 24px 12px; font-style: italic; color: var(--ink-soft); }
+
+  /* ---------- dock: back-to-top + review ---------- */
+  .dock {
+    position: fixed; right: 18px; bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    z-index: 75; display: flex; align-items: flex-end; gap: 10px;
+  }
+  .totop {
+    width: 42px; height: 42px; border-radius: 50%; border: 1px solid var(--rule);
+    background: var(--paper); color: var(--ink); cursor: pointer; font-size: 1rem;
+    display: grid; place-items: center; box-shadow: var(--sh-2);
+    opacity: 0; transform: translateY(10px) scale(.9); pointer-events: none;
+    transition: all .35s var(--ease);
+  }
+  .totop.on { opacity: 1; transform: none; pointer-events: auto; }
+  .totop:hover { background: var(--verify); color: var(--paper); border-color: var(--verify); transform: translateY(-3px); }
+  .review-wrap { position: relative; }
+  .review-tab {
+    display: inline-flex; align-items: center; gap: 9px;
+    border: 1px solid var(--rule); background: var(--paper-card); color: var(--ink);
+    border-radius: 999px; padding: 10px 18px; cursor: pointer; box-shadow: var(--sh-2);
+    font-family: var(--serif); font-variant: small-caps; letter-spacing: .05em; font-size: .92rem;
+    transition: all .3s var(--ease);
+  }
+  .review-tab:hover { transform: translateY(-3px); box-shadow: var(--sh-3); border-color: var(--ink-soft); }
+  .review-tab .quill { color: var(--stamp); transition: transform .4s var(--ease); display: inline-block; }
+  .review-tab:hover .quill { transform: rotate(-18deg) translateY(-2px); }
+  .review-panel {
+    position: absolute; right: 0; bottom: calc(100% + 12px); width: min(340px, calc(100vw - 36px));
+    background: var(--paper); border: 1px solid var(--rule); border-radius: 4px;
+    box-shadow: var(--sh-3); padding: 20px 20px 18px;
+    opacity: 0; transform: translateY(14px) scale(.97); pointer-events: none;
+    transition: opacity .3s ease, transform .38s var(--ease);
+    background-image: repeating-linear-gradient(to bottom, transparent 0 27px, var(--line-soft) 27px 28px);
+  }
+  .review-panel.on { opacity: 1; transform: none; pointer-events: auto; }
+  .review-panel h4 { font-family: var(--display); font-style: italic; font-size: 1.1rem; }
+  .review-panel .sub { font-family: var(--mono); font-size: .58rem; letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); margin-bottom: 12px; }
+  .review-panel label { display: block; font-variant: small-caps; letter-spacing: .06em; font-size: .78rem; color: var(--ink-soft); margin: 10px 0 4px; }
+  .review-panel textarea { resize: vertical; min-height: 78px; font-family: var(--serif); }
+  .review-panel .actions { display: flex; justify-content: space-between; align-items: center; margin-top: 14px; gap: 10px; }
+  .review-close { position: absolute; top: 8px; right: 10px; border: 0; background: none; cursor: pointer; color: var(--ink-soft); font-size: 1.05rem; padding: 4px; }
+  .review-close:hover { color: var(--stamp); }
+  .thanks {
+    position: absolute; inset: 0; background: var(--paper); border-radius: 4px;
+    display: grid; place-items: center; text-align: center; padding: 20px;
+    opacity: 0; pointer-events: none; transition: opacity .3s ease;
+  }
+  .thanks.on { opacity: 1; pointer-events: auto; }
+  .thanks .thumb { font-size: 2.6rem; display: block; animation: thumbPop .6s var(--ease); }
+  @keyframes thumbPop { 0% { transform: scale(0) rotate(-30deg); } 60% { transform: scale(1.25) rotate(8deg); } 100% { transform: scale(1) rotate(0); } }
+  .thanks .stamped {
+    margin-top: 10px; display: inline-block; border: 2px solid var(--verify); color: var(--verify);
+    padding: 6px 14px; border-radius: 3px; font-variant: small-caps; letter-spacing: .08em;
+    transform: rotate(-6deg) scale(0); animation: stampDown .5s var(--ease) .18s forwards;
+  }
+  @keyframes stampDown { 0% { transform: rotate(-16deg) scale(2.4); opacity: 0; } 70% { transform: rotate(-4deg) scale(.94); opacity: 1; } 100% { transform: rotate(-6deg) scale(1); opacity: 1; } }
+  .notes-list { margin-top: 16px; border-top: 1px dashed var(--line); padding-top: 12px; max-height: 128px; overflow-y: auto; }
+  .note-item { font-size: .84rem; color: var(--ink-soft); padding: 6px 0; border-bottom: 1px dotted var(--line-soft); }
+  .note-item b { color: var(--ink); font-style: italic; font-weight: 600; }
+  .note-item .when { font-family: var(--mono); font-size: .58rem; letter-spacing: .08em; opacity: .7; display: block; }
+
+  /* ---------- mascot ---------- */
+  .mascot-wrap {
+    position: fixed; left: 16px; bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+    z-index: 74; display: flex; align-items: flex-end; gap: 10px; pointer-events: none;
+  }
+  .mascot {
+    width: 92px; height: 100px; flex: none; cursor: pointer; pointer-events: auto;
+    background: none; border: 0; padding: 0; position: relative;
+    filter: drop-shadow(0 8px 12px color-mix(in srgb, var(--ink) 28%, transparent));
+    transition: transform .35s var(--ease);
+  }
+  .mascot:hover { transform: translateY(-4px) scale(1.04); }
+  .mascot svg { width: 100%; height: 100%; overflow: visible; }
+  #masBody { transform-origin: 50px 96px; animation: breathe 4.6s ease-in-out infinite; }
+  @keyframes breathe { 0%,100% { transform: scale(1) translateY(0); } 50% { transform: scale(1.025) translateY(-1.5px); } }
+  #masQuill { transform-origin: 74px 78px; animation: quillBob 3.4s ease-in-out infinite; }
+  @keyframes quillBob { 0%,100% { transform: rotate(-2deg); } 50% { transform: rotate(6deg); } }
+  .mas-lid { transform-box: fill-box; transform-origin: center; transform: scaleY(0); animation: blink 7s ease-in-out infinite; }
+  @keyframes blink { 0%, 92%, 100% { transform: scaleY(0); } 95%, 97% { transform: scaleY(1); } }
+  .mascot-bubble {
+    pointer-events: auto; position: relative; max-width: 210px;
+    background: var(--paper); border: 1px solid var(--rule); border-radius: 4px;
+    padding: 11px 14px; font-size: .84rem; color: var(--ink); box-shadow: var(--sh-2);
+    opacity: 0; transform: translateY(8px) scale(.95); transform-origin: left bottom;
+    transition: opacity .3s ease, transform .38s var(--ease);
+    margin-bottom: 26px;
+  }
+  .mascot-bubble.on { opacity: 1; transform: none; }
+  .mascot-bubble::before {
+    content: ""; position: absolute; left: -7px; bottom: 14px; width: 12px; height: 12px;
+    background: var(--paper); border-left: 1px solid var(--rule); border-bottom: 1px solid var(--rule);
+    transform: rotate(45deg);
+  }
+  .mascot-bubble .who { font-family: var(--mono); font-size: .54rem; letter-spacing: .16em; text-transform: uppercase; color: var(--stamp-soft); display: block; margin-bottom: 3px; }
+  .mascot-bubble a { color: var(--verify); text-decoration: underline; text-underline-offset: 3px; cursor: pointer; }
+  .mascot-dismiss {
+    position: absolute; left: 72px; bottom: 82px; width: 20px; height: 20px; border-radius: 50%;
+    border: 1px solid var(--line); background: var(--paper); color: var(--ink-soft);
+    font-size: .62rem; cursor: pointer; display: grid; place-items: center; padding: 0;
+    pointer-events: auto; opacity: 0; transition: opacity .25s ease, background .2s ease, color .2s ease;
+    z-index: 2;
+  }
+  .mascot-wrap:hover .mascot-dismiss, .mascot-dismiss:focus-visible { opacity: 1; }
+  .mascot-dismiss:hover { background: var(--stamp); color: var(--paper); border-color: var(--stamp); }
+  @media (max-width: 620px) {
+    .mascot { width: 58px; height: 64px; opacity: .94; }
+    .mascot-dismiss { left: 42px; bottom: 50px; }
+    .mascot-bubble { max-width: 148px; font-size: .76rem; padding: 8px 10px; margin-bottom: 14px; }
+    .dock { right: 12px; bottom: calc(12px + env(safe-area-inset-bottom, 0px)); }
+    .review-tab { padding: 9px 14px; font-size: .84rem; }
+    .mascot-wrap { left: 10px; bottom: calc(10px + env(safe-area-inset-bottom, 0px)); }
+  }
+
+  /* ---------- deed / nft ---------- */
+  .deed {
+    margin-top: 20px; max-width: 330px; border: 1px solid var(--rule);
+    background: var(--paper-card); padding: 22px; position: relative; border-radius: 2px;
+    cursor: pointer; transition: transform .35s var(--ease), box-shadow .35s ease;
+  }
+  .deed::before { content: ""; position: absolute; inset: 6px; border: 1px solid var(--rule); opacity: .6; pointer-events: none; }
+  .deed:hover { transform: translateY(-5px) rotate(-.6deg); box-shadow: var(--sh-3); }
+  .deed .title { font-family: var(--display); font-style: italic; font-size: 1.05rem; font-weight: 600; }
+  .deed .addr { font-family: var(--mono); font-size: .72rem; color: var(--ink-soft); margin-top: 10px; line-height: 1.7; }
+  .deed .seal {
+    display: inline-flex; align-items: center; gap: 6px; margin-top: 14px;
+    font-size: .78rem; font-style: italic; color: var(--paper); background: var(--stamp);
+    padding: 4px 12px; border-radius: 999px; transform: rotate(-2deg);
+    transition: transform .35s var(--ease);
+  }
+  .deed:hover .seal { transform: rotate(3deg) scale(1.05); }
+  .deed .flip-note { font-size: .72rem; font-variant: small-caps; letter-spacing: .08em; color: var(--ink-soft); margin-top: 12px; display: block; }
+
+  /* diagram pair */
+  .diagram-pair { display: flex; gap: 30px; margin-top: 22px; flex-wrap: wrap; }
+  .diagram-box { flex: 1 1 230px; border: 1px solid transparent; border-radius: 4px; padding: 10px; cursor: pointer; transition: border-color .3s ease, background .3s ease, transform .3s var(--ease); }
+  .diagram-box:hover { border-color: var(--line); background: var(--tint); transform: translateY(-3px); }
+  .diagram-box.on { border-color: var(--rule); background: var(--tint-strong); }
+  .diagram-box svg { width: 100%; height: auto; }
+  .diagram-box .cap { font-style: italic; font-size: .85rem; color: var(--ink-soft); margin-top: 8px; text-align: center; }
+  .diagram-box .node-dot { transition: transform .4s var(--ease), fill .4s ease; transform-origin: center; transform-box: fill-box; }
+  .diagram-box.on .node-dot { animation: nodePulse 1.8s ease-in-out infinite; }
+  @keyframes nodePulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.28); } }
+  .diagram-box .edge { transition: stroke .4s ease, stroke-opacity .4s ease; }
+  .diagram-box.on .edge { stroke: var(--verify-soft); }
+  .diagram-verdict { margin-top: 14px; font-style: italic; color: var(--ink-soft); font-size: .92rem; min-height: 3em; border-left: 2px solid var(--line); padding-left: 12px; }
+
+  /* ---------- footer ---------- */
+  footer {
+    border-top: 2px solid var(--rule);
+    padding: 40px 0 calc(120px + env(safe-area-inset-bottom, 0px));
+    font-size: .9rem; font-style: italic; color: var(--ink-soft); position: relative;
+  }
+  footer::before { content: ""; position: absolute; left: 0; right: 0; top: 5px; height: 1px; background: var(--rule); opacity: .5; }
+  footer .foot-row { display: flex; justify-content: space-between; gap: 20px; flex-wrap: wrap; }
+  footer a { color: var(--ink-soft); text-decoration: underline; text-underline-offset: 3px; }
+  footer a:hover { color: var(--ink); }
+  .colophon { margin-top: 26px; display: flex; gap: 10px; flex-wrap: wrap; align-items: center; font-family: var(--mono); font-size: .6rem; letter-spacing: .1em; text-transform: uppercase; color: var(--ink-soft); }
+  .colophon span { border: 1px solid var(--line-soft); padding: 3px 8px; border-radius: 2px; }
+
+  /* ---------- reduced motion ---------- */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: .001ms !important; animation-iteration-count: 1 !important;
+      transition-duration: .001ms !important; scroll-behavior: auto !important;
+    }
+    .js .reveal { opacity: 1; transform: none; }
+    body::after { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<script>
+  /* Scroll reveals are opt-in for scripted browsers only, and a watchdog
+     un-hides everything if the main script never gets to run. Nothing on this
+     page should ever be invisible because of a failed animation. */
+  document.documentElement.className += ' js';
+  window.__slBoot = false;
+  setTimeout(function () {
+    if (window.__slBoot) return;
+    var n = document.querySelectorAll('.reveal');
+    for (var i = 0; i < n.length; i++) n[i].classList.add('in');
+  }, 4000);
+</script>
+
+<div class="progress-rail" aria-hidden="true"><div class="progress-fill" id="progressFill"></div></div>
+
+<div class="wrap">
+
+  <div class="topbar">
+    <div class="brand">
+      The Shared <span>Ledger</span>
+      <em class="folio-chip" id="folioChip">fol. 001</em>
+    </div>
+    <div class="nav-scroll">
+      <nav id="mainNav" aria-label="Sections of the primer">
+        <a href="#what">Blockchain</a>
+        <a href="#decentral">Decentralization</a>
+        <a href="#crypto">Crypto</a>
+        <a href="#contracts">Contracts</a>
+        <a href="#nft">NFTs</a>
+        <a href="#dao">DAOs</a>
+        <a href="#map">Map</a>
+        <a href="#history">History</a>
+        <a href="#versus">Web2·Web3</a>
+        <a href="#wallets">Wallets</a>
+        <a href="#journey">Transaction</a>
+        <a href="#gas">Gas</a>
+        <a href="#dapps">dApps</a>
+        <a href="#code">Code</a>
+        <a href="#myths">Myths</a>
+        <a href="#wallet">Try it</a>
+      </nav>
+    </div>
+    <div class="bar-tools">
+      <button class="icon-btn" id="glossaryBtn" type="button" aria-haspopup="dialog" aria-expanded="false">Index</button>
+      <button class="icon-btn" id="themeToggle" type="button" aria-label="Switch between day and night paper">Night</button>
+    </div>
+  </div>
+
+  <!-- ============================ HERO ============================ -->
+  <section class="hero">
+    <div class="hero-corner" aria-hidden="true">
+      <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" fill="none" stroke="var(--rule)" stroke-width="1">
+        <path d="M2 2 H118 V118" stroke-width="1.5"/>
+        <path d="M10 10 H110 V110" opacity=".6"/>
+        <circle cx="60" cy="60" r="34" opacity=".5"/>
+        <circle cx="60" cy="60" r="26" opacity=".35"/>
+        <path d="M60 26 V94 M26 60 H94" opacity=".3"/>
+        <path d="M44 60 L60 44 L76 60 L60 76 Z" stroke="var(--stamp-soft)" opacity=".75"/>
+      </svg>
+    </div>
+    <div class="folio">Web3 Primer — Entry No. 001 <span class="meta-label">read time ≈ 12 min</span></div>
+    <h1 id="heroTitle">A ledger everyone keeps together.</h1>
+    <p class="lede">For most of history, records of who-owns-what were kept by one trusted party — a bank, a registry office, a platform. Web3 asks a stranger question: what if the ledger itself was the trusted party, copied everywhere, owned nowhere?</p>
+    <div class="cta-row">
+      <a class="btn primary" href="#what">Start reading</a>
+      <a class="btn" href="#journey">Follow a transaction</a>
+      <button class="btn ghost small" type="button" id="heroGlossary">Open the index</button>
+    </div>
+
+    <!-- interactive chain -->
+    <div class="chain-panel reveal" id="chainPanel">
+      <div class="chain-toolbar">
+        <div>
+          <div class="folio" style="margin-bottom:4px;">Plate I — the chain, kept live</div>
+          <span class="demo-tag">visual demonstration only</span>
+        </div>
+        <div class="btn-row">
+          <button class="btn small" type="button" id="addBlockBtn">＋ Add a block</button>
+          <button class="btn small ghost" type="button" id="tamperBtn">✎ Tamper with block 2</button>
+          <button class="btn small ghost" type="button" id="resetChainBtn">↺ Re-seal</button>
+        </div>
+      </div>
+
+      <div class="chain-stage" id="chainStage">
+        <div class="chain" id="chain"></div>
+      </div>
+
+      <div class="block-detail" id="blockDetail" aria-live="polite">
+        <div class="folio" id="bdTitle" style="margin-bottom:10px;">Block</div>
+        <dl>
+          <dt>height</dt><dd id="bdHeight">—</dd>
+          <dt>recorded</dt><dd id="bdData">—</dd>
+          <dt>prev. hash</dt><dd id="bdPrev">—</dd>
+          <dt>this hash</dt><dd id="bdHash">—</dd>
+          <dt>entries</dt><dd id="bdTx">—</dd>
+          <dt>sealed by</dt><dd id="bdVal">—</dd>
+        </dl>
+        <div class="verdict ok" id="bdVerdict">Status: verified — this page's fingerprint matches the one the next page remembers.</div>
+      </div>
+
+      <p class="chain-note" id="chainNote"><strong>Try it:</strong> click any block to open its page. Add a block and watch the seal land — then tamper with block 2 and see how many pages break at once.</p>
+    </div>
+  </section>
+
+  <!-- ============================ LEDGER ENTRIES ============================ -->
+  <section class="ledger">
+
+    <article class="entry reveal" id="what">
+      <div class="folio-col">
+        <div class="folio-num">001</div>
+        <span class="meta-label">chapter</span>
+      </div>
+      <div>
+        <h2>What a blockchain actually is</h2>
+        <p>Strip away the hype and a <button class="term" data-term="blockchain" type="button" aria-expanded="false">blockchain</button> is a record book copied across thousands of computers instead of locked in one office. Each new page — a <button class="term" data-term="block" type="button" aria-expanded="false">block</button> — lists a batch of transactions and is sealed with a <button class="term" data-term="hash" type="button" aria-expanded="false">hash</button>: a short fingerprint generated from everything on that page.</p>
+        <p>Here's the clever part: each block's hash also depends on the hash of the block before it. Change one word on an old page and its fingerprint changes, which breaks every fingerprint after it. That's what "immutable" really means here — not impossible to alter, just instantly obvious and expensive to fake.</p>
+
+        <div class="panel tight hashlab" style="margin-top:22px;">
+          <div class="sec-head" style="margin-bottom:12px;">
+            <h3 style="font-size:1.05rem;font-style:italic;font-family:var(--display);">The fingerprint bench</h3>
+            <span class="meta-label">type and watch</span>
+          </div>
+          <div class="row">
+            <div style="flex:1 1 220px;">
+              <label for="hashInput">write something on the page</label>
+              <input class="field" id="hashInput" type="text" value="pay Alice 5 coins" maxlength="64" autocomplete="off" spellcheck="false">
+            </div>
+            <span class="hash-arrow" aria-hidden="true">→</span>
+            <div class="hash-out" id="hashOut" aria-live="polite"></div>
+          </div>
+          <p class="note" id="hashNote">Change a single letter. The fingerprint doesn't change a little — it changes completely. That is why a forged page is easy to spot. <em>(This bench uses a small illustrative hash, not the real SHA-256.)</em></p>
+        </div>
+      </div>
+    </article>
+
+    <article class="entry reveal" id="decentral">
+      <div class="folio-col">
+        <div class="folio-num">002</div>
+        <span class="meta-label">chapter</span>
+      </div>
+      <div>
+        <h2>Decentralization: who keeps the copy</h2>
+        <p>A normal ledger has one keeper. If the bank makes an error, or the platform shuts down, the record goes with it. A blockchain hands a copy to every <button class="term" data-term="node" type="button" aria-expanded="false">node</button> in the network and settles disagreements through <button class="term" data-term="consensus" type="button" aria-expanded="false">consensus</button> — rules like Proof of Work or Proof of Stake that decide whose version of the next block gets accepted by the rest.</p>
+        <div class="diagram-pair">
+          <div class="diagram-box" id="diagOne" role="button" tabindex="0" aria-pressed="false">
+            <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+              <line class="edge" x1="100" y1="75" x2="20" y2="20" stroke="var(--rule)" stroke-width="1.5"/>
+              <line class="edge" x1="100" y1="75" x2="180" y2="20" stroke="var(--rule)" stroke-width="1.5"/>
+              <line class="edge" x1="100" y1="75" x2="20" y2="130" stroke="var(--rule)" stroke-width="1.5"/>
+              <line class="edge" x1="100" y1="75" x2="180" y2="130" stroke="var(--rule)" stroke-width="1.5"/>
+              <line class="edge" x1="100" y1="75" x2="100" y2="20" stroke="var(--rule)" stroke-width="1.5"/>
+              <rect class="node-dot" x="85" y="60" width="30" height="30" fill="none" stroke="var(--ink)" stroke-width="2"/>
+              <circle cx="20" cy="20" r="7" fill="none" stroke="var(--rule)" stroke-width="2"/>
+              <circle cx="180" cy="20" r="7" fill="none" stroke="var(--rule)" stroke-width="2"/>
+              <circle cx="20" cy="130" r="7" fill="none" stroke="var(--rule)" stroke-width="2"/>
+              <circle cx="180" cy="130" r="7" fill="none" stroke="var(--rule)" stroke-width="2"/>
+              <circle cx="100" cy="20" r="7" fill="none" stroke="var(--rule)" stroke-width="2"/>
+            </svg>
+            <div class="cap">one ledger keeper</div>
+          </div>
+          <div class="diagram-box" id="diagMany" role="button" tabindex="0" aria-pressed="false">
+            <svg viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg">
+              <g class="edges" fill="none" stroke="var(--rule)" stroke-width="1.5">
+                <line class="edge" x1="30" y1="30" x2="100" y2="20"/>
+                <line class="edge" x1="30" y1="30" x2="170" y2="35"/>
+                <line class="edge" x1="30" y1="30" x2="30" y2="120"/>
+                <line class="edge" x1="30" y1="30" x2="100" y2="130"/>
+                <line class="edge" x1="100" y1="20" x2="170" y2="35"/>
+                <line class="edge" x1="100" y1="20" x2="100" y2="130"/>
+                <line class="edge" x1="170" y1="35" x2="170" y2="120"/>
+                <line class="edge" x1="170" y1="35" x2="100" y2="130"/>
+                <line class="edge" x1="30" y1="120" x2="100" y2="130"/>
+                <line class="edge" x1="170" y1="120" x2="100" y2="130"/>
+                <line class="edge" x1="30" y1="120" x2="170" y2="120"/>
+              </g>
+              <g fill="var(--paper)" stroke="var(--ink)" stroke-width="2">
+                <circle class="node-dot" cx="30" cy="30" r="7"/>
+                <circle class="node-dot" cx="100" cy="20" r="7"/>
+                <circle class="node-dot" cx="170" cy="35" r="7"/>
+                <circle class="node-dot" cx="30" cy="120" r="7"/>
+                <circle class="node-dot" cx="170" cy="120" r="7"/>
+                <circle class="node-dot" cx="100" cy="130" r="7"/>
+              </g>
+            </svg>
+            <div class="cap">many ledger keepers</div>
+          </div>
+        </div>
+        <div class="diagram-verdict" id="diagVerdict">Click either diagram to see what happens when a keeper disappears.</div>
+      </div>
+    </article>
+
+    <article class="entry reveal" id="crypto">
+      <div class="folio-col">
+        <div class="folio-num">003</div>
+        <span class="meta-label">chapter</span>
+      </div>
+      <div>
+        <h2>Cryptocurrency: entries, not coins</h2>
+        <p>A coin like Bitcoin or Ether is really a line in the shared ledger saying "this much value moved from address A to address B." Your <button class="term" data-term="wallet" type="button" aria-expanded="false">wallet</button> doesn't hold coins the way a leather wallet holds cash — it holds a <button class="term" data-term="private key" type="button" aria-expanded="false">private key</button>, a secret signature proving the entries belong to you.</p>
+        <p>Lose the key and you lose access, permanently. There is no branch to walk into and no password-reset email — which is exactly the trade-off decentralization makes.</p>
+        <div class="grid g3" style="margin-top:20px;">
+          <div class="card" tabindex="0" data-tilt>
+            <div class="glyph" style="color:var(--rule);font-size:1.4rem;">⊞</div>
+            <h4>Fungible</h4>
+            <p>Any one unit is interchangeable with any other, like a rupee or a dollar.</p>
+          </div>
+          <div class="card" tabindex="0" data-tilt>
+            <div class="glyph" style="color:var(--rule);font-size:1.4rem;">⧉</div>
+            <h4>Divisible</h4>
+            <p>Entries can be split into tiny fractions — you are never forced to move a whole coin.</p>
+          </div>
+          <div class="card" tabindex="0" data-tilt>
+            <div class="glyph" style="color:var(--rule);font-size:1.4rem;">⌁</div>
+            <h4>Volatile</h4>
+            <p>Prices are set by open markets and can swing sharply. This primer is not financial advice.</p>
+          </div>
+        </div>
+      </div>
+    </article>
+
+    <article class="entry reveal" id="contracts">
+      <div class="folio-col">
+        <div class="folio-num">004</div>
+        <span class="meta-label">chapter</span>
+      </div>
+      <div>
+        <h2>Smart contracts: rules that run themselves</h2>
+        <p>A <button class="term" data-term="smart contract" type="button" aria-expanded="false">smart contract</button> writes "if this, then that" directly into the ledger. If address A sends 1 ETH, release the ticket. If the auction closes, send the funds to the highest bidder. Once deployed, nobody can pull it aside for a favor — it executes exactly as written, every time.</p>
+        <p>It resembles a vending machine more than a legal contract: no clerk, no landlord, no discretion. That reliability is the entire pitch, and also the entire risk — a bug written into the machine runs just as faithfully as a correct one.</p>
+        <div class="panel tight" style="margin-top:20px;">
+          <div class="gas-flow" style="margin-top:0;">
+            <span class="node">input arrives</span><span class="hash-arrow">→</span>
+            <span class="node">rule is checked</span><span class="hash-arrow">→</span>
+            <span class="node">outcome executes</span><span class="hash-arrow">→</span>
+            <span class="node">result recorded</span>
+          </div>
+          <p class="note" style="margin-top:14px;">No step in that row waits for a human to approve it. That is the whole idea — and the reason auditing the code matters so much.</p>
+        </div>
+      </div>
+    </article>
+
+    <article class="entry reveal" id="nft">
+      <div class="folio-col">
+        <div class="folio-num">005</div>
+        <span class="meta-label">chapter</span>
+      </div>
+      <div>
+        <h2>NFTs: unique entries in a fungible world</h2>
+        <p>One Bitcoin is worth exactly one Bitcoin, always — that's what "fungible" means. An <button class="term" data-term="nft" type="button" aria-expanded="false">NFT</button> (non-fungible token) is a ledger entry that instead says: <span class="keyword">this one thing is unique, and this address owns it</span> — closer to a deed or a ticket stub than to money.</p>
+        <p>What's provably owned is often just the deed, not the file itself — the artwork usually lives elsewhere, with the token pointing to it.</p>
+        <div class="deed" id="deedCard" role="button" tabindex="0" aria-pressed="false" data-tilt>
+          <div class="title">Certificate of Provenance</div>
+          <div class="addr" id="deedBody">owner: 0x7c4f…91ad<br>token id: #0042<br>chain: illustrative</div>
+          <div class="seal">recorded on ledger</div>
+          <span class="flip-note" id="deedHint">click the deed to transfer it</span>
+        </div>
+      </div>
+    </article>
+
+    <article class="entry reveal" id="dao">
+      <div class="folio-col">
+        <div class="folio-num">006</div>
+        <span class="meta-label">chapter</span>
+      </div>
+      <div>
+        <h2>DAOs: bylaws written as code</h2>
+        <p>A <button class="term" data-term="dao" type="button" aria-expanded="false">DAO</button> — Decentralized Autonomous Organization — runs a group the way a smart contract runs a transaction: budgets and voting rules live in code, not a binder in a filing cabinet. Members hold tokens that double as voting weight, and proposals pass or fail by the ledger's own tally.</p>
+        <p>No CEO signs off. The organization's "decision" is whatever the code and the vote produce — for better and for worse.</p>
+
+        <div class="panel tight" style="margin-top:20px;" id="votePanel">
+          <div class="sec-head" style="margin-bottom:10px;">
+            <h3 style="font-size:1.05rem;font-style:italic;font-family:var(--display);">Proposal No. 17 — fund the archive</h3>
+            <span class="demo-tag">mock vote</span>
+          </div>
+          <div class="btn-row" style="margin-bottom:14px;">
+            <button class="btn small" type="button" data-vote="for">Vote for</button>
+            <button class="btn small ghost" type="button" data-vote="against">Vote against</button>
+            <button class="btn small ghost" type="button" data-vote="reset">Clear</button>
+          </div>
+          <div style="display:flex;gap:10px;align-items:center;">
+            <span class="mono" style="font-size:.7rem;letter-spacing:.1em;">FOR</span>
+            <div class="board-bar" style="flex:1;margin-top:0;"><i id="voteBar" style="width:62%;"></i></div>
+            <span class="mono" id="voteRead" style="font-size:.78rem;min-width:9ch;">62% · 310</span>
+          </div>
+          <p class="note" id="voteNote">Your tokens are your voting weight. Cast a vote to see the tally move — then notice that nothing here asked permission from an administrator.</p>
+        </div>
+      </div>
+    </article>
+
+  </section>
+
+  <!-- ============================ CONCEPT MAP ============================ -->
+  <section class="band reveal" id="map">
+    <div class="sec-head">
+      <span class="folio">007</span>
+      <h2>Learn the basics: a map of the territory</h2>
+      <span class="meta-label">click any node</span>
+    </div>
+    <p class="lede-2">Seven ideas do most of the work in Web3, and they lean on each other in a particular order. Tap a node to light up what it connects to.</p>
+    <div class="cmap-shell">
+      <div class="cmap" id="cmap">
+        <svg class="cmap-lines" id="cmapLines" aria-hidden="true"></svg>
+        <div class="cmap-nodes" id="cmapNodes"></div>
+      </div>
+      <div class="cmap-panel" id="cmapPanel">
+        <div class="kicker" id="cmKicker">start anywhere</div>
+        <h3 id="cmTitle">The shape of it</h3>
+        <p class="body" id="cmBody">A blockchain keeps the record. Wallets prove who you are to it. Crypto is what moves across it. Smart contracts add rules. NFTs, DAOs and dApps are all things you build once those four exist.</p>
+        <div class="sub"><b>analogy</b><span id="cmAnalogy">A town with a public register, a signature, a currency, and a rulebook — everything else is what the townspeople build on top.</span></div>
+        <div class="sub"><b>why it matters</b><span id="cmWhy">Almost every confusing Web3 headline becomes readable once you can place it on this map.</span></div>
+        <div class="links" id="cmLinks"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ HISTORY ============================ -->
+  <section class="band reveal" id="history">
+    <div class="sec-head">
+      <span class="folio">008</span>
+      <h2>A short history of the shared ledger</h2>
+      <span class="meta-label">archival record</span>
+    </div>
+    <p class="lede-2">None of this appeared overnight. The pieces were assembled over thirty years, mostly by people solving unrelated problems.</p>
+
+    <div class="timeline">
+      <div class="tl-rail-wrap" id="tlWrap">
+        <div class="tl-rail" id="tlRail">
+          <div class="tl-fill" id="tlFill"></div>
+        </div>
+      </div>
+      <div class="tl-detail" id="tlDetail" aria-live="polite">
+        <div class="inner">
+          <div class="yr" id="tlYear">1991</div>
+          <h3 id="tlTitle">Timestamping a document</h3>
+          <p id="tlBody">Select a year on the rail above to read its entry.</p>
+        </div>
+      </div>
+      <div class="tl-nav">
+        <button class="btn small ghost" type="button" id="tlPrev">← Earlier</button>
+        <button class="btn small ghost" type="button" id="tlNext">Later →</button>
+        <span class="meta-label" id="tlCount">entry 1 of 7</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ WEB2 VS WEB3 ============================ -->
+  <section class="band reveal" id="versus">
+    <div class="sec-head">
+      <span class="folio">009</span>
+      <h2>Web2 and Web3, side by side</h2>
+      <span class="meta-label">click a row</span>
+    </div>
+    <p class="lede-2">Not a before-and-after. They are two different sets of trade-offs, and plenty of things work better the old way.</p>
+    <div class="versus">
+      <div class="versus-col">
+        <header>Web2 <span class="tag">platform-held</span></header>
+        <div id="w2col"></div>
+      </div>
+      <div class="versus-mid"><span>versus</span></div>
+      <div class="versus-col">
+        <header>Web3 <span class="tag">key-held</span></header>
+        <div id="w3col"></div>
+      </div>
+    </div>
+    <div class="nuance" id="vNuance">
+      <span class="k">the honest footnote</span>
+      <p>Pick any row to compare the two columns — and to read what the comparison quietly leaves out.</p>
+    </div>
+  </section>
+
+  <!-- ============================ WALLET ANATOMY ============================ -->
+  <section class="band reveal" id="wallets">
+    <div class="sec-head">
+      <span class="folio">010</span>
+      <h2>Wallets, keys and what "signing" means</h2>
+      <span class="meta-label">walk the four parts</span>
+    </div>
+    <p class="lede-2">A wallet is the most misunderstood object in Web3. It holds no money. It holds the ability to prove something.</p>
+    <div class="wa-shell">
+      <div class="wa-steps" id="waSteps"></div>
+      <div class="wa-panel">
+        <div class="kicker mono" id="waKicker" style="font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--stamp-soft);">part one</div>
+        <h3 id="waTitle">Seed phrase</h3>
+        <p id="waBody">Pick a part on the left to read what it does.</p>
+        <div class="keyline" id="waKeyline">—</div>
+        <div class="sig-demo">
+          <button class="btn small" type="button" id="signDemoBtn">✎ Sign a message (illustration)</button>
+          <div class="sig-out" id="sigOut" aria-live="polite"></div>
+          <p class="note" style="margin-top:10px;">Nothing here touches a real wallet. It draws what a signature <em>is</em>: proof produced by a key, checkable by anyone, revealing the key to no one.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ TRANSACTION JOURNEY ============================ -->
+  <section class="band reveal" id="journey">
+    <div class="sec-head">
+      <span class="folio">011</span>
+      <h2>Follow a transaction</h2>
+      <span class="demo-tag">simulation — nothing is sent</span>
+    </div>
+    <p class="lede-2">Seven steps separate "I press send" from "it is confirmed." Run them, or step through at your own pace.</p>
+    <div class="tx-shell">
+      <div class="tx-rail" id="txRail">
+        <div class="tx-progress" id="txProgress"></div>
+      </div>
+      <div>
+        <div class="tx-panel">
+          <div class="step-n" id="txStepN">step 0 of 7</div>
+          <h3 id="txTitle">Ready when you are</h3>
+          <p id="txBody">Press <em>Start</em> to watch an ordinary transaction travel from a wallet to a sealed block — or use the step buttons to move one stage at a time.</p>
+          <div class="receipt" id="txReceipt">
+            <span>from &nbsp;<b>0x7c4f…91ad</b></span>
+            <span>to &nbsp;&nbsp;&nbsp;<b>0x2e9b…44c1</b></span>
+            <span>value <b>0.05 ETH (illustrative)</b></span>
+            <span id="txStatusLine">status <b>not started</b></span>
+          </div>
+          <div class="tx-seal" id="txSeal">confirmed<br>on chain</div>
+        </div>
+        <div class="btn-row" style="margin-top:16px;">
+          <button class="btn primary small" type="button" id="txStart">▷ Start</button>
+          <button class="btn small ghost" type="button" id="txPrev">‹ Back</button>
+          <button class="btn small ghost" type="button" id="txNext">Next ›</button>
+          <button class="btn small ghost" type="button" id="txReset">↺ Reset</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ GAS ============================ -->
+  <section class="band reveal" id="gas">
+    <div class="sec-head">
+      <span class="folio">012</span>
+      <h2>Why a transaction sometimes costs money</h2>
+      <span class="demo-tag">simplified illustration</span>
+    </div>
+    <p class="lede-2">Every computer in the network has to redo your work to agree with you. <button class="term" data-term="gas" type="button" aria-expanded="false">Gas</button> is the fee that pays for that effort — and it rises when everyone wants in at once.</p>
+    <div class="panel">
+      <div class="gas-shell">
+        <div>
+          <div class="gas-bars" id="gasBars" aria-hidden="true"></div>
+          <label for="gasRange" style="display:block;margin-top:14px;font-variant:small-caps;letter-spacing:.06em;font-size:.86rem;color:var(--ink-soft);">how busy is the network right now?</label>
+          <input type="range" id="gasRange" min="0" max="100" value="35" aria-describedby="gasNote">
+          <div style="display:flex;justify-content:space-between;font-family:var(--mono);font-size:.62rem;letter-spacing:.1em;color:var(--ink-soft);text-transform:uppercase;">
+            <span>quiet night</span><span id="gasMood">ordinary</span><span>everyone at once</span>
+          </div>
+        </div>
+        <div>
+          <div class="gas-read" id="gasFee">≈ 0.0021</div>
+          <div style="font-family:var(--mono);font-size:.64rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);">illustrative fee, in network units</div>
+          <div class="gas-flow">
+            <span class="node">transaction</span><span class="hash-arrow">→</span>
+            <span class="node">network computation</span><span class="hash-arrow">→</span>
+            <span class="node">gas fee</span>
+          </div>
+          <p class="note" id="gasNote">A simple transfer costs a little. A complicated smart-contract call costs more, because it asks the network to do more work.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ DAPPS ============================ -->
+  <section class="band reveal" id="dapps">
+    <div class="sec-head">
+      <span class="folio">013</span>
+      <h2>dApps: applications with no landlord</h2>
+      <span class="meta-label">expand any card</span>
+    </div>
+    <p class="lede-2">A <button class="term" data-term="dapp" type="button" aria-expanded="false">dApp</button> looks like an ordinary website. The difference is underneath: its rules live in smart contracts rather than on a company's server.</p>
+    <div class="grid g3" id="dappGrid"></div>
+  </section>
+
+  <!-- ============================ UNDER THE HOOD ============================ -->
+  <section class="band reveal" id="code">
+    <div class="sec-head">
+      <span class="folio">014</span>
+      <h2>Under the hood</h2>
+      <span class="meta-label">the actual handshake</span>
+    </div>
+    <p class="lede-2">The wallet button further down this page runs roughly this. It is short on purpose: connecting a wallet is a request for permission to read an address, and nothing more.</p>
+
+    <div class="codebox">
+      <header>
+        <span class="fname">connect-wallet.js</span>
+        <button class="btn small copy-btn" type="button" id="copyCodeBtn">
+          <span>Copy</span>
+          <span class="copy-flash" id="copyFlash" aria-hidden="true">Copied ✓</span>
+        </button>
+      </header>
+      <div class="code-scroll"><pre id="codeOut"></pre></div>
+      <details class="explainer">
+        <summary>What does this code do?</summary>
+        <div class="exp-body">
+          <ol>
+            <li><code>window.ethereum</code> is the doorway a browser wallet installs. No wallet, no doorway — so we check first and fail politely.</li>
+            <li><code>eth_requestAccounts</code> asks the wallet to show you a permission dialog. You approve it, not the website.</li>
+            <li>What comes back is an <em>address</em> — public, shareable, harmless. The private key never leaves the wallet.</li>
+            <li><code>eth_chainId</code> just asks which network the wallet is pointed at. It is a read; it costs nothing.</li>
+            <li>There is no <code>eth_sendTransaction</code> and no <code>personal_sign</code> here. Connecting cannot move funds.</li>
+          </ol>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============================ MYTHS ============================ -->
+  <section class="band reveal" id="myths">
+    <div class="sec-head">
+      <span class="folio">015</span>
+      <h2>Myth &amp; reality</h2>
+      <span class="meta-label">turn each card over</span>
+    </div>
+    <p class="lede-2">Four sentences you will hear repeated confidently, and what is actually the case.</p>
+    <div class="grid g2" id="mythGrid"></div>
+  </section>
+
+  <!-- ============================ WALLET CONNECT ============================ -->
+  <section class="band reveal" id="wallet">
+    <div class="sec-head">
+      <span class="folio">016</span>
+      <h2>Sign your own ledger entry</h2>
+      <span class="meta-label">bonus entry</span>
+    </div>
+    <p class="lede-2">Everything above is theory. This button makes it real for a second: connecting a wallet doesn't move any funds — it just proves, with your private key, that an address is yours.</p>
+
+    <div class="wallet-grid">
+      <div class="wallet-box">
+        <h3>Connect a wallet</h3>
+        <p>Requires a browser wallet such as MetaMask. Nothing is sent, spent, or signed beyond the connection itself.</p>
+        <button class="btn primary" id="connectBtn" type="button">Connect wallet</button>
+        <ol class="wallet-seq" id="walletSeq">
+          <li data-step="0"><span class="tick" aria-hidden="true"></span> Looking for a wallet in this browser</li>
+          <li data-step="1"><span class="tick" aria-hidden="true"></span> Requesting permission</li>
+          <li data-step="2"><span class="tick" aria-hidden="true"></span> Wallet responded</li>
+          <li data-step="3"><span class="tick" aria-hidden="true"></span> Connected</li>
+        </ol>
+        <div class="wallet-status" id="walletStatus" role="status" aria-live="polite"></div>
+        <p class="note" id="walletHelp" hidden></p>
+      </div>
+
+      <div class="wcard idle" id="walletCard" data-tilt>
+        <div class="wc-head">
+          <span class="wc-title">Bearer of the key</span>
+          <span class="wc-tag" id="wcState">unclaimed</span>
+        </div>
+        <button class="addr-btn" id="copyAddrBtn" type="button" aria-label="Copy wallet address">
+          <span id="walletAddr">0x0000…0000</span>
+          <span class="hint" id="copyHint">click to copy</span>
+        </button>
+        <dl>
+          <dt>network</dt><dd id="wcChain">—</dd>
+          <dt>chain id</dt><dd id="wcChainId">—</dd>
+          <dt>holds</dt><dd>the key, not the coins</dd>
+        </dl>
+        <div class="seal-big" aria-hidden="true">address<br>verified</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ LEARNED BOARD ============================ -->
+  <section class="band reveal" id="learned">
+    <div class="sec-head">
+      <span class="folio">017</span>
+      <h2>You just learned</h2>
+      <span class="meta-label">stamp what stuck</span>
+    </div>
+    <div class="board">
+      <div class="board-head">
+        <h3>Certificate of Reading</h3>
+        <div class="sub">the shared ledger · countersign each entry you followed</div>
+      </div>
+      <div class="learn-grid" id="learnGrid"></div>
+      <div class="board-bar"><i id="learnBar"></i></div>
+      <div class="board-foot">
+        <span class="count" id="learnCount">0 of 8 entries countersigned</span>
+        <button class="btn small ghost" type="button" id="learnReset">↺ Clear the board</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============================ STACK BUILDER ============================ -->
+  <section class="band reveal" id="stack">
+    <div class="sec-head">
+      <span class="folio">018</span>
+      <h2>Build your Web3 stack</h2>
+      <span class="meta-label">choose one from each row</span>
+    </div>
+    <p class="lede-2">Four choices and you have described a real application. Pick them and watch the architecture assemble itself.</p>
+    <div class="stack-shell">
+      <div id="stackOptions"></div>
+      <div class="stack-vis">
+        <div class="plate" data-plate="app"><span class="p-k">interface</span><div class="p-v" data-v="app">—</div></div>
+        <div class="plate" data-plate="contract"><span class="p-k">logic</span><div class="p-v" data-v="contract">—</div></div>
+        <div class="plate" data-plate="chain"><span class="p-k">settlement</span><div class="p-v" data-v="chain">—</div></div>
+        <div class="plate" data-plate="wallet"><span class="p-k">identity</span><div class="p-v" data-v="wallet">—</div></div>
+        <div class="stack-sentence" id="stackSentence">Nothing chosen yet. Start with a wallet — every Web3 stack does.</div>
+        <div style="margin-top:14px;"><button class="btn small ghost" type="button" id="stackReset">↺ Start over</button></div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="foot-row">
+      <div>Written as a beginner primer for a Web3 &amp; Blockchain hackathon track.</div>
+      <div>
+        <a href="https://ethereum.org/en/developers/docs/" target="_blank" rel="noopener">ethereum.org docs</a> ·
+        <a href="https://bitcoin.org/en/how-it-works" target="_blank" rel="noopener">bitcoin.org</a>
+      </div>
+    </div>
+    <div class="colophon">
+      <span>set in playfair display &amp; eb garamond</span>
+      <span>hashes in courier prime</span>
+      <span>no tracking · no analytics</span>
+      <span>every simulation on this page is illustrative</span>
+    </div>
+  </footer>
+</div>
+
+<!-- ============================ TERM POPOVER ============================ -->
+<div class="popover" id="termPop" role="dialog" aria-modal="false" aria-labelledby="popTitle">
+  <button class="pop-close" type="button" id="popClose" aria-label="Close explanation">✕</button>
+  <h4 id="popTitle">Term</h4>
+  <p class="def" id="popDef"></p>
+  <p class="analogy" id="popAnalogy"></p>
+  <p class="why" id="popWhy"></p>
+</div>
+
+<!-- ============================ GLOSSARY DRAWER ============================ -->
+<div class="scrim" id="scrim"></div>
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawerTitle" aria-hidden="true">
+  <header>
+    <div>
+      <h3 id="drawerTitle">Index of terms</h3>
+      <div class="sub">the shared ledger · appendix</div>
+    </div>
+    <button class="icon-btn" type="button" id="drawerClose">Close</button>
+  </header>
+  <div class="search-wrap">
+    <label class="sr" for="glossarySearch">Search the index</label>
+    <input class="field" id="glossarySearch" type="search" placeholder="Search — hash, gas, DAO…" autocomplete="off">
+  </div>
+  <div class="list" id="glossaryList"></div>
+</aside>
+
+<!-- ============================ DOCK ============================ -->
+<div class="dock">
+  <button class="totop" id="toTop" type="button" aria-label="Back to the top of the ledger">↑</button>
+  <div class="review-wrap">
+    <div class="review-panel" id="reviewPanel" role="dialog" aria-label="Leave a note in the ledger">
+      <button class="review-close" type="button" id="reviewClose" aria-label="Close the note panel">✕</button>
+      <h4>Leave a note in the ledger</h4>
+      <div class="sub">marginalia · kept only in this browser</div>
+      <form id="reviewForm">
+        <label for="reviewName">your name <em style="text-transform:none;letter-spacing:0;">(optional)</em></label>
+        <input class="field" id="reviewName" type="text" maxlength="40" autocomplete="off" placeholder="an anonymous reader">
+        <label for="reviewText">your note</label>
+        <textarea class="field" id="reviewText" maxlength="280" placeholder="What did this page make clearer?" required></textarea>
+        <div class="actions">
+          <span class="meta-label" id="reviewCount">280 left</span>
+          <button class="btn small primary" type="submit">Record it</button>
+        </div>
+      </form>
+      <div class="notes-list" id="notesList"></div>
+      <div class="thanks" id="reviewThanks">
+        <div>
+          <span class="thumb">👍</span>
+          <div class="stamped">Recorded in the ledger ✓</div>
+          <div style="margin-top:12px;"><button class="btn small ghost" type="button" id="reviewAgain">Write another</button></div>
+        </div>
+      </div>
+    </div>
+    <button class="review-tab" id="reviewToggle" type="button" aria-expanded="false" aria-controls="reviewPanel">
+      <span class="quill" aria-hidden="true">✒</span> Leave a note
+    </button>
+  </div>
+</div>
+
+<!-- ============================ MASCOT ============================ -->
+<div class="mascot-wrap" id="mascotWrap">
+  <button class="mascot" id="mascot" type="button" aria-label="The ledger keeper — tap for a hint">
+    <svg viewBox="0 0 100 110" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <ellipse cx="50" cy="104" rx="30" ry="4" fill="var(--ink)" opacity=".16"/>
+      <g id="masBody">
+        <!-- desk -->
+        <rect x="10" y="86" width="80" height="16" rx="2" fill="var(--paper-card)" stroke="var(--rule)" stroke-width="1.2"/>
+        <path d="M17 92 H83 M17 96 H83" stroke="var(--rule)" stroke-width=".8" opacity=".55"/>
+        <!-- robe -->
+        <path d="M30 88 C30 68 38 60 50 60 C62 60 70 68 70 88 Z" fill="var(--paper-card)" stroke="var(--ink)" stroke-width="1.4"/>
+        <path d="M50 62 L46 70 L50 74 L54 70 Z" fill="var(--stamp)"/>
+        <!-- arm + quill -->
+        <path d="M66 80 L75 76" stroke="var(--ink)" stroke-width="2.4" stroke-linecap="round"/>
+        <g id="masQuill">
+          <path d="M75 77 C79 67 84 56 92 45 C88 58 83 69 79 79 Z" fill="var(--rule)" stroke="var(--ink)" stroke-width=".7" stroke-linejoin="round"/>
+          <path d="M76 77 L90 48" stroke="var(--ink)" stroke-width=".6" opacity=".7"/>
+        </g>
+        <!-- head -->
+        <ellipse cx="50" cy="42" rx="23" ry="21" fill="var(--paper-card)" stroke="var(--ink)" stroke-width="1.4"/>
+        <!-- eyeshade visor -->
+        <path d="M27 31 Q50 17 73 31 Q50 41 27 31 Z" fill="var(--verify)" opacity=".92"/>
+        <path d="M29 28 Q50 16 71 28" stroke="var(--verify)" stroke-width="3.4" fill="none" stroke-linecap="round"/>
+        <!-- glasses -->
+        <circle cx="41" cy="45" r="8.4" fill="none" stroke="var(--rule)" stroke-width="1.2"/>
+        <circle cx="59" cy="45" r="8.4" fill="none" stroke="var(--rule)" stroke-width="1.2"/>
+        <path d="M49.4 45 H50.6" stroke="var(--rule)" stroke-width="1.2"/>
+        <!-- eyes -->
+        <circle cx="41" cy="45" r="5.2" fill="var(--paper)"/>
+        <circle cx="59" cy="45" r="5.2" fill="var(--paper)"/>
+        <circle id="masPupilL" cx="41" cy="45" r="2.4" fill="var(--ink)"/>
+        <circle id="masPupilR" cx="59" cy="45" r="2.4" fill="var(--ink)"/>
+        <rect class="mas-lid" x="35.8" y="39.8" width="10.4" height="10.4" fill="var(--paper-card)"/>
+        <rect class="mas-lid" x="53.8" y="39.8" width="10.4" height="10.4" fill="var(--paper-card)"/>
+        <!-- mouth -->
+        <path d="M45.5 55 Q50 58.5 54.5 55" stroke="var(--ink)" stroke-width="1.3" fill="none" stroke-linecap="round"/>
+      </g>
+    </svg>
+  </button>
+  <button class="mascot-dismiss" id="mascotDismiss" type="button" aria-label="Hide the ledger keeper">✕</button>
+  <div class="mascot-bubble" id="mascotBubble" role="status" aria-live="polite">
+    <span class="who">the ledger keeper</span>
+    <span id="mascotText">Welcome. Click anything that looks like it might do something — most of it does.</span>
+  </div>
+</div>
+
+<script type="text/plain" id="codeSource">
+// Ask the browser wallet for permission to see an address.
+// This reads. It never sends, signs, or spends.
+
+async function connectWallet() {
+  if (!window.ethereum) {
+    return { ok: false, reason: 'no wallet installed' };
+  }
+
+  // The wallet shows its own approval dialog here.
+  const accounts = await window.ethereum.request({
+    method: 'eth_requestAccounts'
+  });
+
+  // Which network is the wallet pointed at?
+  const chainId = await window.ethereum.request({
+    method: 'eth_chainId'
+  });
+
+  return { ok: true, address: accounts[0], chainId: chainId };
+}
+
+// Tell us if the reader switches accounts later on.
+window.ethereum?.on('accountsChanged', function (accounts) {
+  console.log('now signing as', accounts[0] || 'nobody');
+});
+</script>
+
+<script>
+(function () {
+  'use strict';
+  window.__slBoot = true;
+
+  /* ========================================================================
+     0 · small helpers
+     ======================================================================== */
+  var $ = function (s, r) { return (r || document).querySelector(s); };
+  var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
+  var REDUCED = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var COARSE = window.matchMedia && window.matchMedia('(pointer: coarse)').matches;
+
+  /* Forward-declared so earlier modules can call them safely before the
+     later modules replace them with the real thing. */
+  var bubble = function () {};
+  var mascotSectionHint = function () {};
+  var closeReview = function () {};
+  var drawCmapLines = function () {};
+
+  var store = {
+    get: function (k, d) { try { var v = localStorage.getItem(k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+    set: function (k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  };
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function wait(ms) { return new Promise(function (r) { setTimeout(r, REDUCED ? 0 : ms); }); }
+
+  /* An illustrative fingerprint. Deterministic, cheap, and emphatically NOT SHA-256. */
+  function fakeHash(str, len) {
+    len = len || 12;
+    var h1 = 0x811c9dc5, h2 = 0x9e3779b9, i;
+    for (i = 0; i < str.length; i++) {
+      h1 ^= str.charCodeAt(i); h1 = Math.imul(h1, 16777619);
+      h2 = Math.imul(h2 ^ str.charCodeAt(i), 2246822507); h2 ^= h2 >>> 13;
+    }
+    var hex = function (n) { return (n >>> 0).toString(16); };
+    var out = '';
+    var a = h1, b = h2;
+    while (out.length < len) {
+      out += ('00000000' + hex(a)).slice(-8);
+      a = Math.imul(a ^ (b + out.length), 2654435761);
+      b = Math.imul(b ^ (a >>> 7), 40503);
+    }
+    return '0x' + out.slice(0, len);
+  }
+  function shortHash(h) { return h.length > 13 ? h.slice(0, 6) + '…' + h.slice(-4) : h; }
+
+  function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(text).catch(function () { return legacyCopy(text); });
+    }
+    return legacyCopy(text);
+  }
+  function legacyCopy(text) {
+    return new Promise(function (resolve, reject) {
+      try {
+        var ta = document.createElement('textarea');
+        ta.value = text; ta.setAttribute('readonly', '');
+        ta.style.cssText = 'position:fixed;top:-1000px;opacity:0;';
+        document.body.appendChild(ta); ta.select();
+        var ok = document.execCommand('copy');
+        document.body.removeChild(ta);
+        ok ? resolve() : reject();
+      } catch (e) { reject(e); }
+    });
+  }
+
+  /* ========================================================================
+     1 · vocabulary — shared by inline terms and the index drawer
+     ======================================================================== */
+  var TERMS = {
+    'blockchain': { t: 'Blockchain', d: 'A record book copied across many computers, where every page is sealed with a fingerprint of the page before it.', a: 'A village register that every household keeps a copy of — and everyone notices when one copy disagrees.', w: 'It lets people who do not trust each other share one record without appointing a guard.' },
+    'block': { t: 'Block', d: 'One page of the ledger: a batch of transactions, a timestamp, and the fingerprint of the previous page.', a: 'A page in a bound book — you cannot slip a new one into the middle without the binding showing it.', w: 'Blocks are why the order of events is agreed on, not argued about.' },
+    'hash': { t: 'Hash', d: 'A short fingerprint generated from a piece of information. The same input always gives the same fingerprint; a one-letter change gives a completely different one.', a: 'A wax seal that re-melts into a different shape if anyone reopens the letter.', w: 'Hashes are what make tampering obvious instead of invisible.' },
+    'node': { t: 'Node', d: 'A computer running the network software and keeping its own copy of the ledger.', a: 'One of the households with a copy of the village register.', w: 'The more independent nodes there are, the harder the record is to quietly rewrite.' },
+    'consensus': { t: 'Consensus', d: 'The rule that decides whose version of the next block the network accepts — Proof of Work and Proof of Stake are two such rules.', a: 'A show of hands with a cost attached, so nobody can raise a thousand hands for free.', w: 'Without it, a copied ledger is just thousands of disagreeing notebooks.' },
+    'wallet': { t: 'Wallet', d: 'Software (or a small device) that stores your keys and uses them to sign. It holds no coins — the ledger holds those.', a: 'A keyring, not a purse.', w: 'Everything you do on-chain starts with the wallet proving an address is yours.' },
+    'private key': { t: 'Private key', d: 'A secret number that can produce signatures for one address. Whoever has it controls that address.', a: 'The only key to a safe-deposit box, with no locksmith in the world who can cut a spare.', w: 'Lose it and access is gone permanently. Share it and the account is gone permanently.' },
+    'public address': { t: 'Public address', d: 'The shareable identifier derived from your key, like 0x7c4f…91ad. Safe to hand out.', a: 'Your account number — fine on an invoice, useless for withdrawing money.', w: 'It is how anyone sends you value, and how the ledger refers to you.' },
+    'smart contract': { t: 'Smart contract', d: 'A program stored on a blockchain that automatically carries out predefined rules when its conditions are met.', a: 'A vending machine: put in the required input and it follows its programmed rule, with nobody behind the counter.', w: 'It removes the middleman — and removes the person who could have fixed the mistake.' },
+    'nft': { t: 'NFT', d: 'A ledger entry marking one specific item as unique and naming the address that holds it. Non-fungible means no two are interchangeable.', a: 'A numbered deed or a ticket stub rather than a banknote.', w: 'It is a portable record of ownership — though usually of the deed, not of the file itself.' },
+    'dao': { t: 'DAO', d: 'A Decentralized Autonomous Organization: a group whose treasury and voting rules live in smart contracts instead of a company charter.', a: 'A club whose bylaws are enforced by the door itself, not by a committee chair.', w: 'It lets strangers run shared money with rules nobody can quietly bend.' },
+    'dapp': { t: 'dApp', d: 'A decentralized application: an ordinary-looking interface whose core logic runs in smart contracts rather than on a company server.', a: 'A shopfront where the till is bolted to the public square.', w: 'The front end can disappear and the rules — and your assets — remain.' },
+    'gas': { t: 'Gas', d: 'The fee paid for the computation a transaction costs the network. Busier networks mean higher fees for the same work.', a: 'Postage that rises when everyone posts on the same morning.', w: 'It stops the network from being flooded with free, pointless work.' }
+  };
+  var GLOSSARY_ORDER = ['blockchain', 'block', 'hash', 'node', 'consensus', 'wallet', 'private key', 'public address', 'smart contract', 'nft', 'dao', 'dapp', 'gas'];
+
+  /* ========================================================================
+     2 · theme
+     ======================================================================== */
+  (function theme() {
+    var root = document.documentElement, btn = $('#themeToggle');
+    var saved = store.get('sl.theme', '');
+    if (saved === 'dark' || saved === 'light') root.setAttribute('data-theme', saved);
+    function label() {
+      var dark = root.getAttribute('data-theme') === 'dark' ||
+        (root.getAttribute('data-theme') !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      btn.textContent = dark ? 'Day' : 'Night';
+      btn.setAttribute('aria-label', dark ? 'Switch to day paper' : 'Switch to night paper');
+    }
+    btn.addEventListener('click', function () {
+      var dark = root.getAttribute('data-theme') === 'dark' ||
+        (root.getAttribute('data-theme') !== 'light' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+      var next = dark ? 'light' : 'dark';
+      root.setAttribute('data-theme', next); store.set('sl.theme', next); label();
+      if (typeof drawCmapLines === 'function') drawCmapLines();
+    });
+    label();
+  })();
+
+  /* ========================================================================
+     3 · hero title, reveal, progress, nav, back-to-top
+     ======================================================================== */
+  (function heroWords() {
+    var h = $('#heroTitle'); if (!h) return;
+    var words = h.textContent.split(' ');
+    h.innerHTML = words.map(function (w, i) {
+      return '<span class="word" style="animation-delay:' + (0.08 + i * 0.07) + 's">' + esc(w) + '</span>';
+    }).join(' ');
+  })();
+
+  (function reveal() {
+    var els = $$('.reveal');
+    els.forEach(function (el, i) { el.style.setProperty('--d', (i % 3) * 0.07 + 's'); });
+    if (!('IntersectionObserver' in window)) { els.forEach(function (e) { e.classList.add('in'); }); return; }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (en) {
+        if (en.isIntersecting) { en.target.classList.add('in'); io.unobserve(en.target); }
+      });
+    }, { threshold: 0.06, rootMargin: '0px 0px -40px 0px' });
+    els.forEach(function (el) { io.observe(el); });
+
+    /* Belt and braces: if the observer is throttled (restored background tab,
+       an embedded view that is not compositing), nothing should ever be left
+       invisible. This sweep costs nothing once everything has been shown. */
+    var pending = els.slice();
+    function sweep() {
+      if (!pending.length) return;
+      pending = pending.filter(function (el) {
+        if (el.classList.contains('in')) return false;
+        var r = el.getBoundingClientRect();
+        if (r.top < window.innerHeight * 1.15 && r.bottom > -60) { el.classList.add('in'); return false; }
+        return true;
+      });
+    }
+    window.addEventListener('scroll', sweep, { passive: true });
+    window.addEventListener('resize', sweep);
+    setTimeout(sweep, 500);
+    sweep();
+  })();
+
+  var SECTIONS = [
+    { id: 'what', folio: '001', hint: 'Start here. Everything later leans on this page.' },
+    { id: 'decentral', folio: '002', hint: 'Click both diagrams — only one survives losing a keeper.' },
+    { id: 'crypto', folio: '003', hint: 'A wallet holds a key. It never holds the coins.' },
+    { id: 'contracts', folio: '004', hint: 'Think vending machine, not lawyer.' },
+    { id: 'nft', folio: '005', hint: 'Try the deed — it changes hands when you click it.' },
+    { id: 'dao', folio: '006', hint: 'Cast a vote below. Nobody has to approve it.' },
+    { id: 'map', folio: '007', hint: 'This map is the whole primer in one picture.' },
+    { id: 'history', folio: '008', hint: 'Walk the years — thirty of them, quickly.' },
+    { id: 'versus', folio: '009', hint: 'Every row hides an honest footnote.' },
+    { id: 'wallets', folio: '010', hint: 'Four parts. The key never leaves the wallet.' },
+    { id: 'journey', folio: '011', hint: 'Press Start. This is the one to watch.' },
+    { id: 'gas', folio: '012', hint: 'Drag the slider and watch the fee climb.' },
+    { id: 'dapps', folio: '013', hint: 'Every card here opens.' },
+    { id: 'code', folio: '014', hint: 'The real handshake, in a dozen lines.' },
+    { id: 'myths', folio: '015', hint: 'Turn the cards over.' },
+    { id: 'wallet', folio: '016', hint: 'Try this — connecting cannot spend anything.' },
+    { id: 'learned', folio: '017', hint: 'Stamp everything that stuck.' },
+    { id: 'stack', folio: '018', hint: 'Four picks and you have described a real app.' }
+  ];
+
+  (function scrollChrome() {
+    var fill = $('#progressFill'), chip = $('#folioChip'), toTop = $('#toTop');
+    var navLinks = $$('#mainNav a');
+    var ticking = false, lastId = '';
+
+    function update() {
+      ticking = false;
+      var doc = document.documentElement;
+      var max = doc.scrollHeight - window.innerHeight;
+      var p = max > 0 ? Math.min(1, Math.max(0, window.scrollY / max)) : 0;
+      fill.style.width = (p * 100).toFixed(2) + '%';
+      toTop.classList.toggle('on', window.scrollY > 700);
+
+      var current = null;
+      for (var i = 0; i < SECTIONS.length; i++) {
+        var el = document.getElementById(SECTIONS[i].id);
+        if (!el) continue;
+        var r = el.getBoundingClientRect();
+        if (r.top <= 160 && r.bottom > 160) { current = SECTIONS[i]; break; }
+        if (r.top > 160) break;
+        current = SECTIONS[i];
+      }
+      if (window.scrollY < 220) current = null;
+      var id = current ? current.id : '';
+      if (id !== lastId) {
+        lastId = id;
+        chip.textContent = 'fol. ' + (current ? current.folio : '001');
+        navLinks.forEach(function (a) {
+          a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+        });
+        if (current) mascotSectionHint(current);
+      }
+    }
+    window.addEventListener('scroll', function () {
+      if (!ticking) { ticking = true; window.requestAnimationFrame(update); }
+    }, { passive: true });
+    window.addEventListener('resize', update);
+    update();
+
+    toTop.addEventListener('click', function () {
+      window.scrollTo({ top: 0, behavior: REDUCED ? 'auto' : 'smooth' });
+    });
+  })();
+
+  /* ========================================================================
+     4 · the living chain
+     ======================================================================== */
+  var chainEl = $('#chain'), chainStage = $('#chainStage'), chainNote = $('#chainNote');
+  var blockDetail = $('#blockDetail');
+  var PAYLOADS = [
+    'opening balances recorded', 'A → B · 12 units', 'deed #0042 minted', 'C → A · 3 units',
+    'contract 0x9d deployed', 'vote tally sealed', 'B → D · 40 units', 'archive fee paid',
+    'E joins the network', 'D → C · 7 units'
+  ];
+  var VALIDATORS = ['network', 'node · elm', 'node · quill', 'node · folio', 'node · ember', 'node · vellum'];
+  var blocks = [], selected = -1, tampered = -1, payloadCursor = 0;
+
+  function seal(i) {
+    var b = blocks[i];
+    b.prevRecorded = i === 0 ? '0x000000000000' : blocks[i - 1].hash;
+    b.hash = fakeHash(b.data + '|' + b.prevRecorded + '|' + i, 12);
+  }
+  function buildChain() {
+    blocks = []; tampered = -1; selected = -1; payloadCursor = 0;
+    for (var i = 0; i < 5; i++) {
+      blocks.push({ data: PAYLOADS[payloadCursor++], tx: 6 + ((i * 7) % 23), val: VALIDATORS[i % VALIDATORS.length] });
+      seal(i);
+    }
+  }
+  /* A block is sound until the chain of fingerprints is cut. The edited block
+     itself still matches its own contents — it is every block AFTER it that
+     suddenly points at a fingerprint nobody has any more. */
+  function validity(i) { return tampered < 0 || i <= tampered; }
+
+  function renderChain(animateIdx, firstRun) {
+    chainEl.innerHTML = '';
+    blocks.forEach(function (b, i) {
+      if (i > 0) {
+        var link = document.createElement('div');
+        link.className = 'link' + (validity(i) ? '' : ' cut');
+        link.setAttribute('data-link', i);
+        if (firstRun) { link.style.animationDelay = (i * 0.22) + 's'; }
+        else { link.style.animation = 'none'; link.style.opacity = '1'; }
+        chainEl.appendChild(link);
+      }
+      var card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'blockcard' + (i === 0 ? ' genesis' : '') +
+        (validity(i) ? '' : ' broken') + (i === tampered ? ' edited' : '');
+      card.setAttribute('data-i', i);
+      card.setAttribute('aria-pressed', selected === i ? 'true' : 'false');
+      card.setAttribute('aria-label', 'Block ' + pad(i) + ' — open its page');
+      if (firstRun) { card.style.animationDelay = (i * 0.22) + 's'; }
+      else if (i === animateIdx) { card.style.animationDelay = '0s'; }
+      else { card.style.animation = 'none'; card.style.opacity = '1'; card.style.transform = 'none'; }
+      card.innerHTML =
+        '<span class="num">BLOCK ' + pad(i) + '</span>' +
+        '<span class="hash">' + esc(b.hash) + '</span>' +
+        '<span class="payload">' + esc(b.data) + '</span>' +
+        '<span class="stamp" aria-hidden="true">' + (i === tampered ? '✎' : (validity(i) ? '✓' : '✕')) + '</span>';
+      var stamp = card.querySelector('.stamp');
+      if (firstRun) stamp.style.animationDelay = (0.25 + i * 0.22) + 's';
+      else if (i !== animateIdx) { stamp.style.animation = 'none'; stamp.style.transform = 'rotate(-11deg) scale(1)'; }
+      chainEl.appendChild(card);
+    });
+  }
+  function pad(n) { return ('000' + (n + 1)).slice(-4); }
+
+  function selectBlock(i) {
+    selected = i;
+    $$('.blockcard', chainEl).forEach(function (c) {
+      c.setAttribute('aria-pressed', String(Number(c.getAttribute('data-i')) === i));
+    });
+    var b = blocks[i], ok = validity(i);
+    $('#bdTitle').textContent = 'Block ' + pad(i) + ' — page of the ledger';
+    $('#bdHeight').textContent = String(i);
+    $('#bdData').textContent = b.data;
+    $('#bdPrev').textContent = i === 0 ? 'none — this is the genesis page' : b.prevRecorded;
+    $('#bdHash').textContent = b.hash;
+    $('#bdTx').textContent = b.tx + ' transactions';
+    $('#bdVal').textContent = b.val;
+    var v = $('#bdVerdict');
+    v.className = 'verdict ' + (ok && i !== tampered ? 'ok' : 'bad');
+    v.textContent = i === tampered
+      ? 'Status: altered — this page was rewritten after it was sealed, so it now carries a different fingerprint than the rest of the chain recorded.'
+      : (ok
+        ? 'Status: verified — the fingerprint this page carries matches the one the next page remembers.'
+        : 'Status: broken — an earlier page was altered, so the previous fingerprint recorded here points at something that no longer exists.');
+    blockDetail.classList.add('open');
+
+    // ripple the connections up to this block
+    $$('.link', chainEl).forEach(function (l) {
+      var li = Number(l.getAttribute('data-link'));
+      l.classList.toggle('lit', li <= i && validity(li));
+      l.classList.remove('pulse');
+    });
+    if (!REDUCED) {
+      $$('.link', chainEl).forEach(function (l) {
+        var li = Number(l.getAttribute('data-link'));
+        if (li <= i) setTimeout(function () {
+          l.classList.add('pulse');
+          setTimeout(function () { l.classList.remove('pulse'); }, 480);
+        }, li * 90);
+      });
+    }
+  }
+
+  chainEl.addEventListener('click', function (e) {
+    var card = e.target.closest('.blockcard'); if (!card) return;
+    selectBlock(Number(card.getAttribute('data-i')));
+  });
+
+  $('#addBlockBtn').addEventListener('click', function () {
+    if (blocks.length >= 12) { note('The chain is long enough for one page. Re-seal to start again.'); return; }
+    var i = blocks.length;
+    blocks.push({
+      data: PAYLOADS[payloadCursor++ % PAYLOADS.length],
+      tx: 4 + ((i * 11) % 27),
+      val: VALIDATORS[i % VALIDATORS.length]
+    });
+    seal(i);
+    renderChain(i, false);
+    selectBlock(i);
+    setTimeout(function () { chainStage.scrollTo({ left: chainStage.scrollWidth, behavior: REDUCED ? 'auto' : 'smooth' }); }, 60);
+    note('<strong>Block ' + pad(i) + ' added.</strong> Its fingerprint <span class="mono">' + esc(shortHash(blocks[i].hash)) +
+      '</span> was built from its own contents <em>and</em> from block ' + pad(i - 1) + '’s fingerprint. That is the whole chain, in one step.');
+  });
+
+  $('#tamperBtn').addEventListener('click', function () {
+    if (blocks.length < 3) return;
+    tampered = 1;
+    blocks[1].data = 'A → B · 12 000 units ✎';
+    blocks[1].hash = fakeHash(blocks[1].data + '|' + blocks[1].prevRecorded + '|1', 12);
+    renderChain(-1, false);
+    var card = chainEl.querySelector('.blockcard[data-i="1"]');
+    if (card) { card.classList.add('flash'); setTimeout(function () { card.classList.remove('flash'); }, 700); }
+    selectBlock(2);
+    note('<strong>Somebody edited block 0002.</strong> Its fingerprint changed, so block 0003 no longer recognises it — and every page after that breaks too. Nothing was hidden; it was made obvious.');
+  });
+
+  $('#resetChainBtn').addEventListener('click', function () {
+    buildChain(); renderChain(-1, true); blockDetail.classList.remove('open');
+    note('<strong>Chain re-sealed.</strong> Five honest pages, each remembering the one before it.');
+  });
+
+  function note(html) { chainNote.innerHTML = html; }
+  buildChain(); renderChain(-1, true);
+
+  /* ========================================================================
+     5 · the fingerprint bench
+     ======================================================================== */
+  (function hashBench() {
+    var input = $('#hashInput'), out = $('#hashOut'), last = '';
+    function render() {
+      var h = fakeHash(input.value || ' ', 18);
+      out.innerHTML = '';
+      for (var i = 0; i < h.length; i++) {
+        var s = document.createElement('span');
+        s.className = 'ch' + (last && last[i] !== h[i] ? ' changed' : '');
+        s.textContent = h[i];
+        out.appendChild(s);
+      }
+      last = h;
+      setTimeout(function () { $$('.ch', out).forEach(function (e) { e.classList.remove('changed'); }); }, 450);
+    }
+    input.addEventListener('input', render);
+    render();
+  })();
+
+  /* ========================================================================
+     6 · clickable terms + popover
+     ======================================================================== */
+  var pop = $('#termPop'), activeTerm = null;
+  function placePop() {
+    if (!activeTerm) return;
+    var r = activeTerm.getBoundingClientRect();
+    var pw = pop.offsetWidth, ph = pop.offsetHeight;
+    var left = r.left + r.width / 2 - pw / 2;
+    left = Math.max(12, Math.min(left, window.innerWidth - pw - 12));
+    var top = r.bottom + 10;
+    if (top + ph > window.innerHeight - 12) top = Math.max(12, r.top - ph - 10);
+    pop.style.left = left + 'px';
+    pop.style.top = top + 'px';
+  }
+  function openPop(btn) {
+    var key = (btn.getAttribute('data-term') || '').toLowerCase();
+    var d = TERMS[key]; if (!d) return;
+    closePop();
+    $('#popTitle').textContent = d.t;
+    $('#popDef').textContent = d.d;
+    $('#popAnalogy').textContent = d.a;
+    $('#popWhy').innerHTML = '<b>why it matters</b> ' + esc(d.w);
+    activeTerm = btn;
+    btn.setAttribute('aria-expanded', 'true');
+    pop.classList.add('open');
+    placePop();
+  }
+  function closePop() {
+    pop.classList.remove('open');
+    if (activeTerm) activeTerm.setAttribute('aria-expanded', 'false');
+    activeTerm = null;
+  }
+  document.addEventListener('click', function (e) {
+    var t = e.target.closest('.term');
+    if (t) {
+      e.preventDefault();
+      if (activeTerm === t) { closePop(); } else { openPop(t); }
+      return;
+    }
+    if (!e.target.closest('#termPop')) closePop();
+  });
+  $('#popClose').addEventListener('click', function () { var a = activeTerm; closePop(); if (a) a.focus(); });
+  window.addEventListener('scroll', placePop, { passive: true });
+  window.addEventListener('resize', placePop);
+
+  /* ========================================================================
+     7 · decentralization diagrams
+     ======================================================================== */
+  (function diagrams() {
+    var one = $('#diagOne'), many = $('#diagMany'), verdict = $('#diagVerdict');
+    var copy = {
+      one: 'One keeper. If that single node goes down — a server outage, a shut-down company, a bad entry — the record goes with it, and everyone connected to it simply stops.',
+      many: 'Many keepers. Any node can vanish and the register survives, because the others still hold identical copies and keep agreeing on the next page.'
+    };
+    function pick(which) {
+      one.classList.toggle('on', which === 'one');
+      many.classList.toggle('on', which === 'many');
+      one.setAttribute('aria-pressed', String(which === 'one'));
+      many.setAttribute('aria-pressed', String(which === 'many'));
+      verdict.textContent = copy[which];
+      verdict.classList.remove('fade-swap'); void verdict.offsetWidth; verdict.classList.add('fade-swap');
+    }
+    [['one', one], ['many', many]].forEach(function (pair) {
+      pair[1].addEventListener('click', function () { pick(pair[0]); });
+      pair[1].addEventListener('keydown', function (e) {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); pick(pair[0]); }
+      });
+    });
+  })();
+
+  /* ========================================================================
+     8 · the deed changes hands
+     ======================================================================== */
+  (function deed() {
+    var card = $('#deedCard'), body = $('#deedBody'), hint = $('#deedHint');
+    var owners = ['0x7c4f…91ad', '0x2e9b…44c1', '0xb18a…0f37', '0x54d0…ee62'];
+    var n = 0;
+    function transfer() {
+      n++;
+      var o = owners[n % owners.length];
+      body.innerHTML = 'owner: ' + esc(o) + '<br>token id: #0042<br>transfers: ' + n;
+      hint.textContent = n === 1 ? 'the deed moved — the artwork did not' : 'click again to transfer it onward';
+      card.classList.remove('fade-swap'); void card.offsetWidth; card.classList.add('fade-swap');
+    }
+    card.addEventListener('click', transfer);
+    card.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); transfer(); }
+    });
+  })();
+
+  /* ========================================================================
+     9 · DAO mock vote
+     ======================================================================== */
+  (function vote() {
+    var panel = $('#votePanel'); if (!panel) return;
+    var bar = $('#voteBar'), read = $('#voteRead'), noteEl = $('#voteNote');
+    var forV = 310, againstV = 190;
+    function draw(msg) {
+      var total = forV + againstV, pct = Math.round(forV / total * 100);
+      bar.style.width = pct + '%';
+      read.textContent = pct + '% · ' + forV;
+      if (msg) { noteEl.textContent = msg; noteEl.classList.remove('fade-swap'); void noteEl.offsetWidth; noteEl.classList.add('fade-swap'); }
+    }
+    panel.addEventListener('click', function (e) {
+      var b = e.target.closest('[data-vote]'); if (!b) return;
+      var v = b.getAttribute('data-vote');
+      if (v === 'for') { forV += 24; draw('Recorded. Your tokens counted as weight — no administrator was asked, and the tally is public the instant it lands.'); }
+      else if (v === 'against') { againstV += 24; draw('Recorded against. A DAO does not mind which way you vote; it only enforces the threshold written in its code.'); }
+      else { forV = 310; againstV = 190; draw('Tally cleared. Real proposals also carry a quorum and a deadline, both written into the contract.'); }
+    });
+    draw();
+  })();
+
+  /* ========================================================================
+     10 · concept map
+     ======================================================================== */
+  /* drawCmapLines is forward-declared above */
+  (function conceptMap() {
+    var NODES = [
+      { k: 'bc', area: 'bc', label: 'Blockchain', kicker: 'the record', body: 'A shared record book copied across many computers, where each page is sealed with a fingerprint of the one before it.', analogy: 'A village register every household keeps a copy of.', why: 'It is the ground everything else in Web3 stands on.' },
+      { k: 'wl', area: 'wl', label: 'Wallets', kicker: 'the signature', body: 'Software holding the keys that prove an address is yours. It signs; it does not store your coins.', analogy: 'A keyring, not a purse.', why: 'Without a wallet you can read a blockchain, but never act on it.' },
+      { k: 'cr', area: 'cr', label: 'Crypto', kicker: 'what moves', body: 'Units of value recorded as ledger entries — moved by signed instructions rather than by a bank transfer.', analogy: 'Numbers in a passbook that everybody can audit.', why: 'It is how value and fees travel across the network.' },
+      { k: 'sc', area: 'sc', label: 'Smart contracts', kicker: 'the rules', body: 'Programs stored on a blockchain that automatically execute predefined rules when their conditions are met.', analogy: 'A vending machine: put in the required input, and it follows its programmed rule.', why: 'They turn a ledger into a platform other things can be built on.' },
+      { k: 'nf', area: 'nf', label: 'NFTs', kicker: 'unique entries', body: 'Tokens where no two are interchangeable — each one points at a specific item and names its holder.', analogy: 'A numbered deed rather than a banknote.', why: 'It gives digital things a transferable record of ownership.' },
+      { k: 'da', area: 'da', label: 'DAOs', kicker: 'the group', body: 'Organisations whose treasury and voting rules live in smart contracts instead of a company charter.', analogy: 'A club whose bylaws are enforced by the door itself.', why: 'It lets strangers run shared money under rules nobody can bend quietly.' },
+      { k: 'ap', area: 'ap', label: 'dApps', kicker: 'the surface', body: 'Applications whose core logic runs in contracts on a network rather than on one company’s server.', analogy: 'A shopfront whose till is bolted to the public square.', why: 'It is the part an ordinary person actually sees and clicks.' }
+    ];
+    var EDGES = [['bc', 'wl'], ['bc', 'cr'], ['wl', 'cr'], ['wl', 'sc'], ['cr', 'sc'], ['sc', 'nf'], ['sc', 'da'], ['nf', 'ap'], ['da', 'ap'], ['sc', 'ap']];
+    var nodesEl = $('#cmapNodes'), svg = $('#cmapLines'), cmap = $('#cmap');
+    var byKey = {}; NODES.forEach(function (n) { byKey[n.k] = n; });
+
+    NODES.forEach(function (n) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'cnode'; b.style.setProperty('--area', n.area);
+      b.setAttribute('data-k', n.k); b.setAttribute('aria-pressed', 'false');
+      b.textContent = n.label;
+      nodesEl.appendChild(b);
+    });
+
+    drawCmapLines = function () {
+      var base = cmap.getBoundingClientRect();
+      if (!base.width) return;
+      svg.setAttribute('viewBox', '0 0 ' + base.width + ' ' + base.height);
+      svg.setAttribute('width', base.width); svg.setAttribute('height', base.height);
+      svg.innerHTML = '';
+      EDGES.forEach(function (e) {
+        var a = nodesEl.querySelector('[data-k="' + e[0] + '"]');
+        var b = nodesEl.querySelector('[data-k="' + e[1] + '"]');
+        if (!a || !b) return;
+        var ra = a.getBoundingClientRect(), rb = b.getBoundingClientRect();
+        var x1 = ra.left - base.left + ra.width / 2, y1 = ra.top - base.top + ra.height / 2;
+        var x2 = rb.left - base.left + rb.width / 2, y2 = rb.top - base.top + rb.height / 2;
+        var mx = (x1 + x2) / 2, my = (y1 + y2) / 2;
+        var dx = x2 - x1, dy = y2 - y1, len = Math.hypot(dx, dy) || 1;
+        var cx = mx + (-dy / len) * len * 0.07, cy = my + (dx / len) * len * 0.07;
+        var p = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        p.setAttribute('d', 'M' + x1 + ' ' + y1 + ' Q' + cx + ' ' + cy + ' ' + x2 + ' ' + y2);
+        p.setAttribute('data-a', e[0]); p.setAttribute('data-b', e[1]);
+        svg.appendChild(p);
+      });
+      if (current) highlight(current);
+    };
+
+    var current = null;
+    function neighbours(k) {
+      var out = [];
+      EDGES.forEach(function (e) {
+        if (e[0] === k) out.push(e[1]);
+        else if (e[1] === k) out.push(e[0]);
+      });
+      return out;
+    }
+    function highlight(k) {
+      var nb = neighbours(k);
+      $$('path', svg).forEach(function (p) {
+        var on = p.getAttribute('data-a') === k || p.getAttribute('data-b') === k;
+        p.classList.toggle('on', on);
+        p.classList.toggle('dim', !on);
+      });
+      $$('.cnode', nodesEl).forEach(function (b) {
+        var bk = b.getAttribute('data-k');
+        b.setAttribute('aria-pressed', String(bk === k));
+        b.classList.toggle('dim', bk !== k && nb.indexOf(bk) === -1);
+      });
+    }
+    function show(k) {
+      current = k;
+      var n = byKey[k];
+      $('#cmKicker').textContent = n.kicker;
+      $('#cmTitle').textContent = n.label;
+      $('#cmBody').textContent = n.body;
+      $('#cmAnalogy').textContent = n.analogy;
+      $('#cmWhy').textContent = n.why;
+      var links = $('#cmLinks'); links.innerHTML = '';
+      neighbours(k).forEach(function (nk) {
+        var c = document.createElement('button');
+        c.type = 'button'; c.className = 'chip'; c.textContent = '→ ' + byKey[nk].label;
+        c.addEventListener('click', function () { show(nk); });
+        links.appendChild(c);
+      });
+      var panel = $('#cmapPanel');
+      panel.classList.remove('fade-swap'); void panel.offsetWidth; panel.classList.add('fade-swap');
+      highlight(k);
+    }
+    nodesEl.addEventListener('click', function (e) {
+      var b = e.target.closest('.cnode'); if (!b) return;
+      show(b.getAttribute('data-k'));
+    });
+    drawCmapLines();
+    window.addEventListener('resize', drawCmapLines);
+    if (window.ResizeObserver) new ResizeObserver(drawCmapLines).observe(cmap);
+    window.addEventListener('load', drawCmapLines);
+    document.fonts && document.fonts.ready && document.fonts.ready.then(drawCmapLines);
+  })();
+
+  /* ========================================================================
+     11 · history timeline
+     ======================================================================== */
+  (function timeline() {
+    var ITEMS = [
+      { y: '1991', cap: 'timestamping', t: 'Cryptographic timestamping', b: 'Two researchers, Stuart Haber and W. Scott Stornetta, describe a way to timestamp a digital document so that nobody can quietly backdate it — by chaining each record to the one before. The idea sat quietly in journals for seventeen years.' },
+      { y: '2008', cap: 'the whitepaper', t: 'The Bitcoin whitepaper', b: 'A nine-page paper published under the name Satoshi Nakamoto proposes electronic cash that settles without a bank, using proof of work so that the network can agree on one history without a referee.' },
+      { y: '2009', cap: 'the first block', t: 'The Bitcoin network launches', b: 'The genesis block is mined and the first transaction is recorded. For the first time a ledger is running that nobody owns, nobody hosts, and anybody can copy in full.' },
+      { y: '2015', cap: 'programmable', t: 'Ethereum launches', b: 'A blockchain built to run programs, not just payments. Smart contracts make the ledger programmable, and almost everything people now call Web3 — tokens, NFTs, DAOs, dApps — becomes possible on top of it.' },
+      { y: '2017', cap: 'tokens everywhere', t: 'Token and NFT ecosystems expand', b: 'Standard token formats make issuing an asset a short piece of code. CryptoKitties clogs Ethereum and, in doing so, teaches a lot of people what gas fees are. Enthusiasm and speculation arrive together.' },
+      { y: '2020', cap: 'DeFi & NFTs', t: 'The DeFi and NFT boom', b: 'Lending, trading and marketplaces run largely in contracts. Digital art sells at auction. The period produces real infrastructure, real fortunes, real losses, and a long list of exploited bugs — often at the same time.' },
+      { y: 'Today', cap: 'infrastructure', t: 'Web3, quieter and more plumbed-in', b: 'Rollups cut fees, wallets get friendlier, and DAOs, dApps and on-chain identity settle into ordinary use. The loud phase is over; the argument over what this is genuinely good for is not.' }
+    ];
+    var rail = $('#tlRail'), wrap = $('#tlWrap'), fill = $('#tlFill');
+    var idx = -1;
+    ITEMS.forEach(function (it, i) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'tl-item'; b.setAttribute('data-i', i); b.setAttribute('aria-pressed', 'false');
+      b.innerHTML = '<span class="tl-dot" aria-hidden="true"></span><span class="tl-year">' + esc(it.y) + '</span><span class="tl-cap">' + esc(it.cap) + '</span>';
+      rail.appendChild(b);
+    });
+    function show(i, scroll) {
+      if (i < 0 || i >= ITEMS.length) return;
+      idx = i;
+      var items = $$('.tl-item', rail);
+      items.forEach(function (b, n) {
+        b.setAttribute('aria-pressed', String(n === i));
+        b.classList.toggle('done', n < i);
+      });
+      var item = items[i];
+      fill.style.width = (item.offsetLeft + item.offsetWidth / 2) + 'px';
+      $('#tlYear').textContent = ITEMS[i].y;
+      $('#tlTitle').textContent = ITEMS[i].t;
+      $('#tlBody').textContent = ITEMS[i].b;
+      $('#tlCount').textContent = 'entry ' + (i + 1) + ' of ' + ITEMS.length;
+      var d = $('#tlDetail');
+      d.classList.remove('fade-swap'); void d.offsetWidth; d.classList.add('fade-swap');
+      if (scroll !== false) {
+        wrap.scrollTo({ left: Math.max(0, item.offsetLeft - wrap.clientWidth / 2 + item.offsetWidth / 2), behavior: REDUCED ? 'auto' : 'smooth' });
+      }
+    }
+    rail.addEventListener('click', function (e) {
+      var b = e.target.closest('.tl-item'); if (!b) return;
+      show(Number(b.getAttribute('data-i')));
+    });
+    rail.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowRight') { e.preventDefault(); show(Math.min(ITEMS.length - 1, idx + 1)); $$('.tl-item', rail)[idx].focus(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); show(Math.max(0, idx - 1)); $$('.tl-item', rail)[idx].focus(); }
+    });
+    $('#tlPrev').addEventListener('click', function () { show(Math.max(0, idx - 1)); });
+    $('#tlNext').addEventListener('click', function () { show(Math.min(ITEMS.length - 1, idx + 1)); });
+    show(0, false);
+    window.addEventListener('resize', function () { if (idx >= 0) { var it = $$('.tl-item', rail)[idx]; fill.style.width = (it.offsetLeft + it.offsetWidth / 2) + 'px'; } });
+  })();
+
+  /* ========================================================================
+     12 · web2 vs web3
+     ======================================================================== */
+  (function versus() {
+    var ROWS = [
+      { k: 'identity', w2: 'You sign in with an account the platform creates and can suspend.', w3: 'You sign in with a wallet you hold the keys to.', n: 'Self-custody cuts both ways: there is no support desk to restore an account you lose the keys to, and phishing becomes your problem rather than the platform’s.' },
+      { k: 'data', w2: 'Content and records sit in company databases, governed by their terms.', w3: 'Some state is public on-chain; much of the rest still sits on ordinary servers.', n: 'Very little is fully on-chain. Images, profiles and app data usually live off-chain, so "decentralized" is a spectrum, not a switch.' },
+      { k: 'assets', w2: 'Purchases are licences held in an account — transferable only if the platform allows it.', w3: 'Assets can be represented on-chain and moved without asking anyone.', n: 'Transferability is real, but what the token points to may still be hosted by someone who can take it down.' },
+      { k: 'rules', w2: 'Policies can be changed by the company, sometimes overnight, sometimes for the better.', w3: 'Rules are written in contracts and are hard to change after deployment.', n: 'Hard to change is a feature until there is a bug. Many projects keep an upgrade key, which quietly reintroduces a trusted party.' }
+    ];
+    var c2 = $('#w2col'), c3 = $('#w3col'), nuance = $('#vNuance');
+    ROWS.forEach(function (r, i) {
+      [[c2, r.w2], [c3, r.w3]].forEach(function (pair) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'vrow'; b.setAttribute('data-r', i);
+        b.innerHTML = '<span class="k">' + esc(r.k) + '</span><span class="v">' + esc(pair[1]) + '</span>';
+        pair[0].appendChild(b);
+      });
+    });
+    function pick(i) {
+      $$('.vrow').forEach(function (b) { b.classList.toggle('on', Number(b.getAttribute('data-r')) === i); });
+      nuance.innerHTML = '<span class="k">the honest footnote · ' + esc(ROWS[i].k) + '</span><p>' + esc(ROWS[i].n) + '</p>';
+      nuance.classList.remove('fade-swap'); void nuance.offsetWidth; nuance.classList.add('fade-swap');
+    }
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest('.vrow'); if (!b) return;
+      pick(Number(b.getAttribute('data-r')));
+    });
+  })();
+
+  /* ========================================================================
+     13 · wallet anatomy
+     ======================================================================== */
+  (function walletAnatomy() {
+    var PARTS = [
+      { icon: '❋', t: 'Seed phrase', s: 'twelve ordinary words', kicker: 'part one', body: 'A list of common words that can regenerate every key in the wallet. It is the wallet, written down. Anyone who reads it owns everything inside.', line: 'ridge · cabin · velvet · orbit · lantern · … (never a real one)' },
+      { icon: '⚷', t: 'Private key', s: 'the secret that signs', kicker: 'part two', body: 'A secret number derived from the seed. It produces signatures and never leaves the wallet — not when you connect, not when you sign.', line: 'private key · held locally · never transmitted' },
+      { icon: '◎', t: 'Public address', s: 'safe to hand out', kicker: 'part three', body: 'Derived from the key by one-way maths. You can share it freely: it lets people send to you and lets anyone check your signatures, but it cannot be run backwards into the key.', line: '0x7c4f8e2ab9c1…91ad' },
+      { icon: '✎', t: 'Signing', s: 'proof without disclosure', kicker: 'part four', body: 'Signing takes a message plus your private key and produces a signature. Anyone can verify it came from your address. Nobody learns the key. Connecting a wallet does not sign anything — it only shares an address.', line: 'message + key → signature → verifiable by all' }
+    ];
+    var host = $('#waSteps');
+    PARTS.forEach(function (p, i) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'wa-step'; b.setAttribute('data-i', i); b.setAttribute('aria-pressed', 'false');
+      b.innerHTML = '<span class="wa-icon" aria-hidden="true">' + p.icon + '</span><span><span class="t">' + esc(p.t) + '</span><br><span class="s">' + esc(p.s) + '</span></span>';
+      host.appendChild(b);
+    });
+    function show(i) {
+      var p = PARTS[i];
+      $$('.wa-step', host).forEach(function (b, n) { b.setAttribute('aria-pressed', String(n === i)); });
+      $('#waKicker').textContent = p.kicker;
+      $('#waTitle').textContent = p.t;
+      $('#waBody').textContent = p.body;
+      $('#waKeyline').textContent = p.line;
+      var panel = $('#waBody').parentNode;
+      panel.classList.remove('fade-swap'); void panel.offsetWidth; panel.classList.add('fade-swap');
+    }
+    host.addEventListener('click', function (e) {
+      var b = e.target.closest('.wa-step'); if (!b) return;
+      show(Number(b.getAttribute('data-i')));
+    });
+    show(0);
+
+    var signBtn = $('#signDemoBtn'), sigOut = $('#sigOut'), n = 0;
+    signBtn.addEventListener('click', function () {
+      n++;
+      var msg = 'I am the holder of this address · note ' + n;
+      sigOut.classList.add('run');
+      sigOut.textContent = 'signing…';
+      setTimeout(function () {
+        sigOut.classList.remove('run');
+        sigOut.innerHTML = 'message: ' + esc(msg) + '<br>signature: ' + esc(fakeHash(msg, 40)) + '<br>verified against 0x7c4f…91ad ✓';
+      }, REDUCED ? 0 : 520);
+    });
+  })();
+
+  /* ========================================================================
+     14 · follow a transaction
+     ======================================================================== */
+  (function journey() {
+    var STEPS = [
+      { l: 'Wallet drafts it', t: 'Your wallet writes the instruction', b: 'You choose an amount and a destination. The wallet assembles a transaction: from, to, value, a fee limit, and a number that keeps your transactions in order.', st: 'drafted' },
+      { l: 'You sign it', t: 'You sign — nothing has left yet', b: 'The wallet signs the transaction with your private key. The key stays put; only the signature travels. This is the moment you actually authorise anything.', st: 'signed' },
+      { l: 'It enters the network', t: 'Broadcast to the network', b: 'The signed transaction is handed to a node, which passes it to its peers. Within seconds it is sitting in a waiting room — the mempool — on computers all over the world.', st: 'broadcast · pending' },
+      { l: 'Validators pick it up', t: 'Validators check and select it', b: 'Validators verify the signature, check you have the balance, and choose which pending transactions to include next. A higher fee makes yours more attractive to include.', st: 'selected' },
+      { l: 'It joins a block', t: 'Written into a block', b: 'Your transaction is placed on the next page of the ledger alongside others, and that page is sealed with a fingerprint built from its contents and the previous page.', st: 'in block' },
+      { l: 'The block joins the chain', t: 'The block is added to the chain', b: 'Nodes accept the new block and each append it to their own copy. Your transaction is now part of the shared history every participant holds.', st: 'on chain' },
+      { l: 'Confirmed', t: 'Confirmed — and increasingly final', b: 'Each block built on top makes reversal more expensive. That is why exchanges wait for a few confirmations rather than one: finality here is practical certainty, not a magic switch.', st: 'confirmed ✓' }
+    ];
+    var rail = $('#txRail'), prog = $('#txProgress'), seal = $('#txSeal');
+    var idx = -1, timer = null;
+
+    STEPS.forEach(function (s, i) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'tx-step'; b.setAttribute('data-i', i);
+      b.innerHTML = '<span class="tx-dot" aria-hidden="true">' + (i + 1) + '</span><span class="lbl">' + esc(s.l) + '</span>';
+      rail.appendChild(b);
+    });
+
+    function show(i) {
+      idx = i;
+      var steps = $$('.tx-step', rail);
+      steps.forEach(function (b, n) {
+        b.classList.toggle('active', n === i);
+        b.classList.toggle('done', n < i);
+      });
+      if (i < 0) {
+        prog.style.height = '0px';
+        $('#txStepN').textContent = 'step 0 of 7';
+        $('#txTitle').textContent = 'Ready when you are';
+        $('#txBody').textContent = 'Press Start to watch an ordinary transaction travel from a wallet to a sealed block — or use the step buttons to move one stage at a time.';
+        $('#txStatusLine').innerHTML = 'status <b>not started</b>';
+        seal.classList.remove('on');
+        return;
+      }
+      var el = steps[i];
+      prog.style.height = Math.max(0, el.offsetTop + el.offsetHeight / 2 - 18) + 'px';
+      $('#txStepN').textContent = 'step ' + (i + 1) + ' of ' + STEPS.length;
+      $('#txTitle').textContent = STEPS[i].t;
+      $('#txBody').textContent = STEPS[i].b;
+      $('#txStatusLine').innerHTML = 'status <b>' + esc(STEPS[i].st) + '</b>';
+      var panel = $('#txTitle').parentNode;
+      panel.classList.remove('fade-swap'); void panel.offsetWidth; panel.classList.add('fade-swap');
+      seal.classList.toggle('on', i === STEPS.length - 1);
+    }
+    function stop() { if (timer) { clearTimeout(timer); timer = null; } $('#txStart').textContent = '▷ Start'; }
+    function play(from) {
+      stop();
+      var i = from;
+      $('#txStart').textContent = '❙❙ Pause';
+      (function step() {
+        show(i);
+        if (i >= STEPS.length - 1) { stop(); return; }
+        i++;
+        timer = setTimeout(step, REDUCED ? 120 : 1700);
+      })();
+    }
+    $('#txStart').addEventListener('click', function () {
+      if (timer) { stop(); return; }
+      play(idx >= STEPS.length - 1 || idx < 0 ? 0 : idx);
+    });
+    $('#txNext').addEventListener('click', function () { stop(); show(Math.min(STEPS.length - 1, idx + 1)); });
+    $('#txPrev').addEventListener('click', function () { stop(); show(Math.max(-1, idx - 1)); });
+    $('#txReset').addEventListener('click', function () { stop(); show(-1); });
+    rail.addEventListener('click', function (e) {
+      var b = e.target.closest('.tx-step'); if (!b) return;
+      stop(); show(Number(b.getAttribute('data-i')));
+    });
+    show(-1);
+    window.addEventListener('resize', function () { if (idx >= 0) show(idx); });
+  })();
+
+  /* ========================================================================
+     15 · gas
+     ======================================================================== */
+  (function gas() {
+    var range = $('#gasRange'), bars = $('#gasBars'), fee = $('#gasFee'), mood = $('#gasMood'), noteEl = $('#gasNote');
+    var N = 16, els = [];
+    for (var i = 0; i < N; i++) { var d = document.createElement('div'); d.className = 'gas-bar'; bars.appendChild(d); els.push(d); }
+    var COPY = [
+      'A quiet network. Your transaction is picked up almost immediately and the fee is close to the floor.',
+      'Ordinary traffic. Fees are predictable, and waiting a few minutes rarely changes much.',
+      'Busy. Validators choose the transactions offering more, so a low fee may sit in the waiting room for a while.',
+      'Congested — a popular mint, a market shock. The same simple transfer now costs many times what it did on a quiet night, for identical work.'
+    ];
+    function draw() {
+      var d = Number(range.value);
+      els.forEach(function (el, i) {
+        var wobble = (Math.sin(i * 1.7) + Math.sin(i * 0.6 + 2)) * 9;
+        var h = Math.max(4, Math.min(100, 12 + d * 0.72 + wobble));
+        el.style.height = h + '%';
+        el.classList.toggle('hot', d > 62 && h > 45);
+      });
+      var f = 0.0008 + Math.pow(d / 100, 2.2) * 0.092;
+      fee.textContent = '≈ ' + f.toFixed(4);
+      var band = d < 22 ? 0 : d < 55 ? 1 : d < 80 ? 2 : 3;
+      mood.textContent = ['quiet', 'ordinary', 'busy', 'congested'][band];
+      noteEl.textContent = COPY[band] + ' (Figures here are illustrative, not live network prices.)';
+    }
+    range.addEventListener('input', draw);
+    draw();
+  })();
+
+  /* ========================================================================
+     16 · dApps
+     ======================================================================== */
+  (function dapps() {
+    var CARDS = [
+      { g: '⚖', t: 'Decentralized finance', p: 'Lending, swapping and saving run by contracts instead of a bank’s back office.', l: ['Swap one token for another without an account', 'Lend into a pool and earn the pool’s rate', 'Borrow against collateral you keep custody of'], c: 'Contract bugs and volatile collateral are real risks; this is not a savings account.' },
+      { g: '◈', t: 'Digital ownership', p: 'Deeds, tickets, credentials and art recorded as tokens you hold directly.', l: ['Event tickets that resell under enforced rules', 'Art with a public provenance trail', 'In-game items that outlive the game’s storefront'], c: 'The token proves the record; the file it points to often still lives on an ordinary server.' },
+      { g: '☷', t: 'Governance', p: 'Shared treasuries and decisions run through proposals and on-chain votes.', l: ['Fund a grant from a shared treasury', 'Vote a parameter change into effect', 'Delegate your voting weight to someone else'], c: 'Token-weighted voting concentrates power in large holders as readily as any shareholder register.' },
+      { g: '◱', t: 'Gaming', p: 'Items and currencies that live outside a single publisher’s database.', l: ['Trade an item peer to peer', 'Carry an asset between compatible worlds', 'Verify scarcity of a limited drop'], c: 'A game still needs to be good. Ownership has never, by itself, made one fun.' },
+      { g: '✦', t: 'Identity', p: 'Readable names and portable credentials attached to an address rather than a platform.', l: ['A human-readable name instead of 0x7c4f…', 'Proof you hold a credential, without revealing more', 'One login across many dApps'], c: 'Pseudonymous is not anonymous: everything an address does is public and linkable.' }
+    ];
+    var host = $('#dappGrid');
+    CARDS.forEach(function (c) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'card dapp'; b.setAttribute('aria-expanded', 'false');
+      b.innerHTML =
+        '<span class="glyph" aria-hidden="true">' + c.g + '</span>' +
+        '<span class="h">' + esc(c.t) + '</span>' +
+        '<span class="p">' + esc(c.p) + '</span>' +
+        '<span class="more">' + c.l.map(function (x) { return '<span class="li">' + esc(x) + '</span>'; }).join('') +
+        '<span class="caveat">' + esc(c.c) + '</span></span>' +
+        '<span class="toggle-hint">click to expand</span>';
+      b.addEventListener('click', function () {
+        var open = b.getAttribute('aria-expanded') === 'true';
+        b.setAttribute('aria-expanded', String(!open));
+        b.querySelector('.toggle-hint').textContent = open ? 'click to expand' : 'click to close';
+      });
+      host.appendChild(b);
+    });
+  })();
+
+  /* ========================================================================
+     17 · under the hood — highlight + copy
+     ======================================================================== */
+  (function codeBox() {
+    var src = ($('#codeSource').textContent || '').replace(/^\s*\n/, '').replace(/\s+$/, '');
+    var out = $('#codeOut');
+    var RX = /(\/\/.*)|('(?:[^'\\]|\\.)*'|"(?:[^"\\]|\\.)*")|\b(async|await|const|let|var|function|return|if|else|new|true|false|null|typeof|this)\b|\b(\d+)\b|([A-Za-z_$][\w$]*)(?=\s*\()/g;
+    out.innerHTML = src.split('\n').map(function (line, i) {
+      var html = esc(line).replace(RX, function (m, com, str, kw, num, fn) {
+        if (com) return '<span class="tk-com">' + com + '</span>';
+        if (str) return '<span class="tk-str">' + str + '</span>';
+        if (kw) return '<span class="tk-kw">' + kw + '</span>';
+        if (num) return '<span class="tk-num">' + num + '</span>';
+        if (fn) return '<span class="tk-fn">' + fn + '</span>';
+        return m;
+      });
+      return '<span class="cl"><span class="ln">' + (i + 1) + '</span><span class="code">' + (html || '&nbsp;') + '</span></span>';
+    }).join('');
+
+    var btn = $('#copyCodeBtn'), flash = $('#copyFlash'), t = null;
+    btn.addEventListener('click', function () {
+      copyText(src).then(function () {
+        btn.classList.add('done'); flash.classList.add('on');
+        clearTimeout(t);
+        t = setTimeout(function () { btn.classList.remove('done'); flash.classList.remove('on'); }, 1600);
+      }).catch(function () {
+        flash.textContent = 'Press Ctrl+C'; flash.classList.add('on');
+        clearTimeout(t);
+        t = setTimeout(function () { flash.classList.remove('on'); flash.textContent = 'Copied ✓'; }, 2200);
+      });
+    });
+  })();
+
+  /* ========================================================================
+     18 · myths
+     ======================================================================== */
+  (function myths() {
+    var M = [
+      { m: 'Blockchain is completely anonymous.', r: 'Most blockchains are better described as pseudonymous. Activity is tied to public addresses, and those addresses can often be linked to real identities through exchanges, reused addresses or ordinary analysis.' },
+      { m: 'Your crypto is stored inside your wallet.', r: 'The wallet manages the keys that control an account. The balances themselves are entries in the blockchain’s own state — which is why the same seed phrase restores your funds on a brand-new device.' },
+      { m: 'Smart contracts are legal contracts.', r: 'A smart contract is a program that executes rules on a blockchain. Whether it carries any legal weight depends entirely on jurisdiction and context — code running is not the same as a court agreeing.' },
+      { m: 'Once it is on-chain, it can never be wrong.', r: 'Immutability protects the record, not the truth of it. A mistaken or fraudulent entry, once confirmed, is permanently recorded — accurately preserved, and still wrong.' }
+    ];
+    var host = $('#mythGrid');
+    M.forEach(function (x) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'myth'; b.setAttribute('aria-pressed', 'false');
+      b.innerHTML =
+        '<span class="myth-inner">' +
+        '<span class="myth-face myth-front"><span class="tagline">myth</span><span class="txt">' + esc(x.m) + '</span><span class="flip-hint">click to turn over ↻</span></span>' +
+        '<span class="myth-face myth-back"><span class="tagline">reality</span><span class="txt">' + esc(x.r) + '</span><span class="flip-hint">click to turn back ↺</span></span>' +
+        '</span>';
+      b.addEventListener('click', function () {
+        b.setAttribute('aria-pressed', String(b.getAttribute('aria-pressed') !== 'true'));
+      });
+      host.appendChild(b);
+    });
+  })();
+
+  /* ========================================================================
+     19 · wallet connection — the real thing
+     ======================================================================== */
+  (function walletConnect() {
+    var btn = $('#connectBtn'), status = $('#walletStatus'), help = $('#walletHelp');
+    var card = $('#walletCard'), addrEl = $('#walletAddr'), stateEl = $('#wcState');
+    var chainEl2 = $('#wcChain'), chainIdEl = $('#wcChainId');
+    var copyBtn = $('#copyAddrBtn'), copyHint = $('#copyHint');
+    var seqItems = $$('#walletSeq li');
+    var currentAddress = null;
+
+    var CHAINS = {
+      '0x1': 'Ethereum Mainnet', '0x5': 'Goerli testnet', '0xaa36a7': 'Sepolia testnet',
+      '0x89': 'Polygon', '0x38': 'BNB Chain', '0xa': 'OP Mainnet',
+      '0xa4b1': 'Arbitrum One', '0x2105': 'Base', '0xe708': 'Linea'
+    };
+    function short(a) { return a.slice(0, 6) + '…' + a.slice(-4); }
+    function mark(i, cls) {
+      var li = seqItems[i]; if (!li) return;
+      li.classList.remove('run', 'ok', 'bad');
+      if (cls) li.classList.add(cls);
+    }
+    function resetSeq() { seqItems.forEach(function (li) { li.classList.remove('run', 'ok', 'bad'); }); }
+    function setStatus(msg, kind) {
+      status.className = 'wallet-status' + (kind ? ' ' + kind : '');
+      status.textContent = msg || '';
+    }
+    function setChain(id) {
+      if (!id) { chainEl2.textContent = 'unknown'; chainIdEl.textContent = '—'; return; }
+      chainEl2.textContent = CHAINS[id] || 'chain ' + id;
+      chainIdEl.textContent = id + ' (' + parseInt(id, 16) + ')';
+    }
+    function setAccount(addr) {
+      currentAddress = addr;
+      addrEl.textContent = short(addr);
+      card.classList.remove('idle'); card.classList.add('live');
+      stateEl.textContent = 'claimed';
+      btn.textContent = 'Connected';
+    }
+    function clearAccount() {
+      currentAddress = null;
+      addrEl.textContent = '0x0000…0000';
+      card.classList.add('idle'); card.classList.remove('live');
+      stateEl.textContent = 'unclaimed';
+      setChain(null);
+      btn.textContent = 'Connect wallet';
+    }
+
+    btn.addEventListener('click', async function () {
+      resetSeq(); setStatus(''); help.hidden = true;
+
+      if (typeof window.ethereum === 'undefined') {
+        mark(0, 'bad');
+        setStatus('No browser wallet detected in this browser.', 'err');
+        help.hidden = false;
+        help.innerHTML = 'A wallet is a browser extension or app that holds your keys — MetaMask, Rabby and Coinbase Wallet are common ones. Install one, reload this page, and the button will find it. Everything else on this page works without a wallet, so nothing is lost if you would rather not.';
+        return;
+      }
+      mark(0, 'ok');
+      mark(1, 'run');
+      setStatus('Requesting permission — approve it in your wallet.');
+      try {
+        var accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        mark(1, 'ok'); mark(2, 'ok');
+        await wait(260);
+        if (accounts && accounts.length) {
+          mark(3, 'ok');
+          setAccount(accounts[0]);
+          setStatus('Connected. This page can read your address — and nothing else.', 'ok');
+          try {
+            var id = await window.ethereum.request({ method: 'eth_chainId' });
+            setChain(id);
+          } catch (e) { setChain(null); }
+          bubble('That seal is real. Notice what did not happen: no signature, no transaction, no spending.', 6000);
+        } else {
+          mark(3, 'bad');
+          setStatus('No account was returned.', 'err');
+        }
+      } catch (err) {
+        mark(1, 'bad');
+        var msg = (err && err.message) ? err.message : 'Connection was rejected.';
+        if (err && err.code === 4001) msg = 'You declined the request — which is exactly how it should work.';
+        if (err && err.code === -32002) msg = 'Your wallet already has a pending request open. Check the extension window.';
+        setStatus(msg, 'err');
+      }
+    });
+
+    copyBtn.addEventListener('click', function () {
+      if (!currentAddress) return;
+      copyText(currentAddress).then(function () {
+        copyHint.textContent = 'copied ✓';
+        copyBtn.style.borderColor = 'var(--verify)';
+        setTimeout(function () { copyHint.textContent = 'click to copy'; copyBtn.style.borderColor = ''; }, 1600);
+      }).catch(function () { copyHint.textContent = 'copy blocked'; setTimeout(function () { copyHint.textContent = 'click to copy'; }, 1600); });
+    });
+
+    if (typeof window.ethereum !== 'undefined') {
+      // read-only: never prompts, just restores an existing permission
+      try {
+        window.ethereum.request({ method: 'eth_accounts' }).then(function (acc) {
+          if (acc && acc.length) {
+            seqItems.forEach(function (li, i) { mark(i, 'ok'); });
+            setAccount(acc[0]);
+            setStatus('Already connected from an earlier visit.', 'ok');
+            return window.ethereum.request({ method: 'eth_chainId' }).then(setChain).catch(function () {});
+          }
+        }).catch(function () {});
+      } catch (e) {}
+      if (window.ethereum.on) {
+        window.ethereum.on('accountsChanged', function (acc) {
+          if (acc && acc.length) { setAccount(acc[0]); setStatus('Switched to a different account.', 'ok'); }
+          else { clearAccount(); resetSeq(); setStatus('Wallet disconnected.', 'err'); }
+        });
+        window.ethereum.on('chainChanged', function (id) { setChain(id); setStatus('Network changed.', 'ok'); });
+      }
+    }
+  })();
+
+  /* ========================================================================
+     20 · you just learned
+     ======================================================================== */
+  (function learned() {
+    var ITEMS = ['Blockchain', 'Decentralization', 'Wallets', 'Transactions', 'Smart contracts', 'NFTs', 'DAOs', 'dApps'];
+    var host = $('#learnGrid'), bar = $('#learnBar'), count = $('#learnCount');
+    var state = store.get('sl.learned', []);
+    if (!Array.isArray(state)) state = [];
+
+    ITEMS.forEach(function (name) {
+      var b = document.createElement('button');
+      b.type = 'button'; b.className = 'lchip'; b.setAttribute('data-n', name);
+      b.setAttribute('aria-pressed', String(state.indexOf(name) > -1));
+      b.innerHTML = '<span class="tickmark" aria-hidden="true">✓</span>' + esc(name) + '<span class="mark" aria-hidden="true">✓</span>';
+      b.addEventListener('click', function () {
+        var on = b.getAttribute('aria-pressed') === 'true';
+        b.setAttribute('aria-pressed', String(!on));
+        if (on) state = state.filter(function (x) { return x !== name; });
+        else if (state.indexOf(name) === -1) state.push(name);
+        store.set('sl.learned', state);
+        draw();
+      });
+      host.appendChild(b);
+    });
+    function draw() {
+      var n = state.length;
+      bar.style.width = (n / ITEMS.length * 100) + '%';
+      count.textContent = n + ' of ' + ITEMS.length + ' entries countersigned' + (n === ITEMS.length ? ' — the ledger is complete.' : '');
+    }
+    $('#learnReset').addEventListener('click', function () {
+      state = []; store.set('sl.learned', state);
+      $$('.lchip', host).forEach(function (b) { b.setAttribute('aria-pressed', 'false'); });
+      draw();
+    });
+    draw();
+  })();
+
+  /* ========================================================================
+     21 · build your web3 stack
+     ======================================================================== */
+  (function stackBuilder() {
+    var SLOTS = [
+      { k: 'wallet', label: 'wallet', opts: ['Browser wallet', 'Mobile wallet', 'Hardware wallet'] },
+      { k: 'chain', label: 'blockchain', opts: ['A layer-1 network', 'A rollup (layer-2)', 'An app-specific chain'] },
+      { k: 'contract', label: 'smart contract', opts: ['A token', 'A marketplace', 'A governance vote'] },
+      { k: 'app', label: 'dApp interface', opts: ['A web app', 'A mobile app', 'A command line'] }
+    ];
+    var host = $('#stackOptions'), sentence = $('#stackSentence');
+    var picks = store.get('sl.stack', {}) || {};
+
+    SLOTS.forEach(function (s) {
+      var wrap = document.createElement('div');
+      wrap.className = 'slot';
+      wrap.innerHTML = '<span class="slot-k">' + esc(s.label) + '</span>';
+      var opts = document.createElement('div'); opts.className = 'opts';
+      s.opts.forEach(function (o) {
+        var b = document.createElement('button');
+        b.type = 'button'; b.className = 'opt'; b.textContent = o;
+        b.setAttribute('data-slot', s.k); b.setAttribute('data-val', o);
+        b.setAttribute('aria-pressed', String(picks[s.k] === o));
+        opts.appendChild(b);
+      });
+      wrap.appendChild(opts); host.appendChild(wrap);
+    });
+
+    host.addEventListener('click', function (e) {
+      var b = e.target.closest('.opt'); if (!b) return;
+      var slot = b.getAttribute('data-slot'), val = b.getAttribute('data-val');
+      picks[slot] = picks[slot] === val ? null : val;
+      $$('.opt[data-slot="' + slot + '"]', host).forEach(function (o) {
+        o.setAttribute('aria-pressed', String(o.getAttribute('data-val') === picks[slot]));
+      });
+      store.set('sl.stack', picks);
+      draw();
+    });
+
+    function draw() {
+      ['wallet', 'chain', 'contract', 'app'].forEach(function (k) {
+        var plate = $('.plate[data-plate="' + k + '"]');
+        var v = $('.p-v[data-v="' + k + '"]');
+        var has = !!picks[k];
+        plate.classList.toggle('on', has);
+        v.textContent = has ? picks[k] : '—';
+      });
+      var missing = SLOTS.filter(function (s) { return !picks[s.k]; });
+      if (missing.length === 0) {
+        sentence.innerHTML = '<b>' + esc(picks.wallet) + '</b> signs into <b>' + esc(picks.chain).toLowerCase() +
+          '</b>, where <b>' + esc(picks.contract).toLowerCase() + '</b> holds the rules, and people reach it through <b>' +
+          esc(picks.app).toLowerCase() + '</b>. That is a complete, perfectly ordinary Web3 application — four decisions, no magic.';
+      } else if (Object.keys(picks).filter(function (k) { return picks[k]; }).length === 0) {
+        sentence.textContent = 'Nothing chosen yet. Start with a wallet — every Web3 stack does.';
+      } else {
+        sentence.textContent = 'Still to choose: ' + missing.map(function (m) { return m.label; }).join(', ') + '.';
+      }
+    }
+    $('#stackReset').addEventListener('click', function () {
+      picks = {}; store.set('sl.stack', picks);
+      $$('.opt', host).forEach(function (o) { o.setAttribute('aria-pressed', 'false'); });
+      draw();
+    });
+    draw();
+  })();
+
+  /* ========================================================================
+     22 · glossary drawer
+     ======================================================================== */
+  (function glossary() {
+    var drawer = $('#drawer'), scrim = $('#scrim'), list = $('#glossaryList'), search = $('#glossarySearch');
+    var openBtn = $('#glossaryBtn'), closeBtn = $('#drawerClose'), heroBtn = $('#heroGlossary');
+    var lastFocus = null;
+
+    GLOSSARY_ORDER.forEach(function (k) {
+      var d = TERMS[k];
+      var item = document.createElement('div');
+      item.className = 'gitem'; item.setAttribute('data-k', k);
+      item.innerHTML =
+        '<button type="button" aria-expanded="false"><span class="g-t">' + esc(d.t) + '</span><span class="g-x" aria-hidden="true">+</span></button>' +
+        '<div class="g-body"><p>' + esc(d.d) + '</p><p class="analogy">' + esc(d.a) + '</p><p><em>' + esc(d.w) + '</em></p></div>';
+      list.appendChild(item);
+    });
+    list.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      var item = b.parentNode;
+      var open = item.classList.toggle('open');
+      b.setAttribute('aria-expanded', String(open));
+    });
+    search.addEventListener('input', function () {
+      var q = search.value.trim().toLowerCase(), shown = 0;
+      $$('.gitem', list).forEach(function (it) {
+        var k = it.getAttribute('data-k'), d = TERMS[k];
+        var hit = !q || (d.t + ' ' + d.d + ' ' + d.a).toLowerCase().indexOf(q) > -1;
+        it.style.display = hit ? '' : 'none';
+        if (hit) shown++;
+      });
+      var empty = $('.gempty', list);
+      if (!shown && !empty) {
+        var e2 = document.createElement('div'); e2.className = 'gempty';
+        e2.textContent = 'Nothing in the index matches that. Try “hash”, “gas” or “key”.';
+        list.appendChild(e2);
+      } else if (shown && empty) { empty.remove(); }
+    });
+
+    function open() {
+      lastFocus = document.activeElement;
+      drawer.classList.add('on'); scrim.classList.add('on');
+      drawer.setAttribute('aria-hidden', 'false');
+      openBtn.setAttribute('aria-expanded', 'true');
+      setTimeout(function () { search.focus(); }, 320);
+    }
+    function close() {
+      drawer.classList.remove('on'); scrim.classList.remove('on');
+      drawer.setAttribute('aria-hidden', 'true');
+      openBtn.setAttribute('aria-expanded', 'false');
+      if (lastFocus && lastFocus.focus) lastFocus.focus();
+    }
+    openBtn.addEventListener('click', open);
+    heroBtn.addEventListener('click', open);
+    closeBtn.addEventListener('click', close);
+    scrim.addEventListener('click', close);
+    document.addEventListener('keydown', function (e) {
+      if (e.key !== 'Escape') return;
+      if (drawer.classList.contains('on')) close();
+      if (pop.classList.contains('open')) closePop();
+      if ($('#reviewPanel').classList.contains('on')) closeReview();
+    });
+    window.openGlossary = open;
+  })();
+
+  /* ========================================================================
+     23 · leave a note in the ledger
+     ======================================================================== */
+  /* closeReview is forward-declared above */
+  (function review() {
+    var toggle = $('#reviewToggle'), panel = $('#reviewPanel'), form = $('#reviewForm');
+    var nameEl = $('#reviewName'), textEl = $('#reviewText'), listEl = $('#notesList');
+    var thanks = $('#reviewThanks'), countEl = $('#reviewCount');
+    var notes = store.get('sl.notes', []);
+    if (!Array.isArray(notes)) notes = [];
+
+    function render() {
+      listEl.innerHTML = '';
+      if (!notes.length) {
+        listEl.innerHTML = '<div class="note-item" style="border:0;">The margin is empty. Yours would be the first.</div>';
+        return;
+      }
+      notes.slice(0, 6).forEach(function (n) {
+        var d = document.createElement('div');
+        d.className = 'note-item';
+        d.innerHTML = '<b>' + esc(n.n || 'an anonymous reader') + '</b> — ' + esc(n.t) + '<span class="when">' + esc(n.d) + '</span>';
+        listEl.appendChild(d);
+      });
+    }
+    function open() {
+      panel.classList.add('on'); toggle.setAttribute('aria-expanded', 'true');
+      setTimeout(function () { textEl.focus(); }, 260);
+    }
+    closeReview = function () {
+      panel.classList.remove('on'); toggle.setAttribute('aria-expanded', 'false');
+      thanks.classList.remove('on');
+    };
+    toggle.addEventListener('click', function () {
+      panel.classList.contains('on') ? closeReview() : open();
+    });
+    $('#reviewClose').addEventListener('click', closeReview);
+    textEl.addEventListener('input', function () { countEl.textContent = (280 - textEl.value.length) + ' left'; });
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      var t = textEl.value.trim(); if (!t) { textEl.focus(); return; }
+      notes.unshift({
+        n: nameEl.value.trim().slice(0, 40),
+        t: t.slice(0, 280),
+        d: new Date().toLocaleDateString(undefined, { day: 'numeric', month: 'short', year: 'numeric' })
+      });
+      notes = notes.slice(0, 20);
+      store.set('sl.notes', notes);
+      textEl.value = ''; countEl.textContent = '280 left';
+      render();
+      thanks.classList.add('on');
+      bubble('Noted and stamped. It stays in this browser — nothing was sent anywhere.', 5000);
+    });
+    $('#reviewAgain').addEventListener('click', function () { thanks.classList.remove('on'); textEl.focus(); });
+    render();
+  })();
+
+  /* ========================================================================
+     24 · the ledger keeper
+     ======================================================================== */
+  /* bubble + mascotSectionHint are forward-declared above */
+  (function mascot() {
+    var wrap = $('#mascotWrap'), mas = $('#mascot'), bub = $('#mascotBubble'), txt = $('#mascotText');
+    var pl = $('#masPupilL'), pr = $('#masPupilR');
+    var timer = null, seen = {};
+
+    if (store.get('sl.mascot', 'on') === 'off') wrap.style.display = 'none';
+
+    bubble = function (message, ms) {
+      if (wrap.style.display === 'none') return;
+      txt.textContent = message;
+      bub.classList.add('on');
+      mas.style.transform = 'translateY(-5px) rotate(-6deg)';
+      setTimeout(function () { mas.style.transform = ''; }, 700);
+      clearTimeout(timer);
+      timer = setTimeout(function () { bub.classList.remove('on'); }, ms || 5200);
+    };
+    mascotSectionHint = function (section) {
+      if (seen[section.id]) return;
+      seen[section.id] = true;
+      bubble(section.hint, 5200);
+    };
+
+    var TIPS = [
+      'Every block in the chain up there opens. Try the tampering button — it is the whole point of a blockchain in one click.',
+      'Stuck on a word? Anything in burgundy with a ✦ explains itself when you click it.',
+      'The index in the top corner holds every term on this page, in order.',
+      'The transaction simulation is the best three minutes on this page. Press Start.',
+      'Nothing here sends a transaction or asks for a signature. Poke at all of it.',
+      'Stamp the board near the bottom as you go — it remembers between visits.'
+    ];
+    var tip = 0;
+    mas.addEventListener('click', function (e) {
+      if (e.target.closest('#mascotDismiss')) return;
+      bubble(TIPS[tip++ % TIPS.length], 6000);
+    });
+    $('#mascotDismiss').addEventListener('click', function (e) {
+      e.stopPropagation();
+      wrap.style.display = 'none';
+      store.set('sl.mascot', 'off');
+    });
+    bub.addEventListener('click', function () { bub.classList.remove('on'); });
+
+    window.__masLook = function (mx, my) {
+      if (!pl || wrap.style.display === 'none') return;
+      var r = mas.getBoundingClientRect();
+      if (!r.width) return;
+      var cx = r.left + r.width / 2, cy = r.top + r.height * 0.42;
+      var dx = mx - cx, dy = my - cy;
+      var d = Math.hypot(dx, dy) || 1;
+      var k = Math.min(1, d / 260) * 2.1;
+      var ox = (dx / d) * k, oy = (dy / d) * k;
+      pl.setAttribute('transform', 'translate(' + ox.toFixed(2) + ' ' + oy.toFixed(2) + ')');
+      pr.setAttribute('transform', 'translate(' + ox.toFixed(2) + ' ' + oy.toFixed(2) + ')');
+    };
+
+    setTimeout(function () {
+      bubble('Welcome. Almost everything on this page does something — start by clicking a block above.', 6500);
+    }, 1800);
+  })();
+
+  /* ========================================================================
+     25 · the page notices your cursor
+     ======================================================================== */
+  (function pointer() {
+    var mx = 0, my = 0, raf = null;
+    var tiltEls = $$('[data-tilt]');
+
+    function apply() {
+      raf = null;
+      document.documentElement.style.setProperty('--mx', mx + 'px');
+      document.documentElement.style.setProperty('--my', my + 'px');
+      if (window.__masLook) window.__masLook(mx, my);
+      if (REDUCED || COARSE) return;
+      for (var i = 0; i < tiltEls.length; i++) {
+        var el = tiltEls[i];
+        var r = el.getBoundingClientRect();
+        if (!r.width || r.bottom < -60 || r.top > window.innerHeight + 60) { continue; }
+        var dx = (mx - (r.left + r.width / 2)) / r.width;
+        var dy = (my - (r.top + r.height / 2)) / r.height;
+        if (Math.abs(dx) < 1.1 && Math.abs(dy) < 1.6) {
+          el.style.transform = 'perspective(800px) rotateY(' + (dx * 4.5).toFixed(2) + 'deg) rotateX(' + (-dy * 4).toFixed(2) + 'deg) translateY(-3px)';
+        } else if (el.style.transform) {
+          el.style.transform = '';
+        }
+      }
+    }
+    window.addEventListener('pointermove', function (e) {
+      mx = e.clientX; my = e.clientY;
+      if (!raf) raf = window.requestAnimationFrame(apply);
+    }, { passive: true });
+    window.addEventListener('pointerleave', function () {
+      tiltEls.forEach(function (el) { el.style.transform = ''; });
+    });
+
+    // buttons take a note of where they were pressed
+    document.addEventListener('pointerdown', function (e) {
+      var b = e.target.closest('.btn'); if (!b) return;
+      var r = b.getBoundingClientRect();
+      b.style.setProperty('--bx', ((e.clientX - r.left) / r.width * 100) + '%');
+      b.style.setProperty('--by', ((e.clientY - r.top) / r.height * 100) + '%');
+    });
+  })();
+
+})();
+</script>
+
+</body>
+</html>
+
+</body></html>
